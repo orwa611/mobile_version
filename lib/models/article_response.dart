@@ -103,6 +103,7 @@ class ArticleResponse {
       authorId: author?.id ?? "",
       title: title,
       description: content,
+      tags: tags,
       firstName: author?.firstName ?? "",
       lastName: author?.lastName ?? "",
       createdAt: date,
