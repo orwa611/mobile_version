@@ -8,6 +8,7 @@ import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_blo
 import 'package:mobile_version/blocs/auth_bloc/auth_bloc.dart';
 import 'package:mobile_version/blocs/comment_bloc.dart/comment_bloc.dart';
 import 'package:mobile_version/blocs/create_article_bloc/create_article_bloc.dart';
+import 'package:mobile_version/blocs/edit_article_bloc.dart/edit_article_bloc.dart';
 import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
 import 'package:mobile_version/blocs/register_bloc/register_bloc.dart';
 import 'package:mobile_version/blocs/user_bloc/user_bloc.dart';
@@ -194,6 +195,7 @@ class MyApp extends StatelessWidget {
                   service: context.read<ArticleServiceManager>(),
                 ),
           ),
+          BlocProvider(create: (context) => EditArticleBloc()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
