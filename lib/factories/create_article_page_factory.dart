@@ -5,7 +5,6 @@ import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
 import 'package:mobile_version/core/extensions/context_extension.dart';
 import 'package:mobile_version/pages/create_article/create_article_notifier.dart';
 import 'package:mobile_version/pages/create_article/create_article_page.dart';
-import 'package:mobile_version/pages/my_account_page.dart';
 import 'package:mobile_version/services/pick_image_service.dart';
 
 final class CreateArticlePageFactory {

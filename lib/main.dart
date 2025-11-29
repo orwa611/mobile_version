@@ -20,6 +20,7 @@ import 'package:mobile_version/core/storage/storage_session.dart';
 import 'package:mobile_version/factories/article_page_factory.dart';
 import 'package:mobile_version/factories/author_page_factory.dart';
 import 'package:mobile_version/factories/create_article_page_factory.dart';
+import 'package:mobile_version/factories/edit_article_page_factory.dart';
 import 'package:mobile_version/factories/home_page_factory.dart';
 import 'package:mobile_version/factories/login_page_factory.dart';
 import 'package:mobile_version/factories/register_page_factory.dart';
@@ -204,6 +205,8 @@ class MyApp extends StatelessWidget {
             AuthorPage.route: AuthorPageFactory.buildAuthorPage,
             CreateArticlePage.route:
                 CreateArticlePageFactory.buildCreateArticlePage,
+            EditArticlePageFactory.route:
+                EditArticlePageFactory.buildEditArticlePage,
           },
         ),
       ),
