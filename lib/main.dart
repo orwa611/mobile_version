@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -6,10 +7,12 @@ import 'package:mobile_version/blocs/article_bloc/article_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
 import 'package:mobile_version/blocs/auth_bloc/auth_bloc.dart';
 import 'package:mobile_version/blocs/comment_bloc.dart/comment_bloc.dart';
+import 'package:mobile_version/blocs/create_article_bloc/create_article_bloc.dart';
 import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
 import 'package:mobile_version/blocs/register_bloc/register_bloc.dart';
 import 'package:mobile_version/blocs/user_bloc/user_bloc.dart';
 import 'package:mobile_version/core/app_image_picker.dart';
+import 'package:mobile_version/core/network/authenticated_dio_network_session.dart';
 import 'package:mobile_version/core/network/authenticated_http_network_session.dart';
 import 'package:mobile_version/core/network/http_network_session.dart';
 import 'package:mobile_version/core/storage/storage_adapter.dart';
@@ -27,6 +30,7 @@ import 'package:mobile_version/pages/login/login_page.dart';
 import 'package:mobile_version/pages/register/register_page.dart';
 import 'package:mobile_version/services/account_service.dart';
 import 'package:mobile_version/services/article_service.dart';
+import 'package:mobile_version/services/article_service_manager.dart';
 import 'package:mobile_version/services/auth_service.dart';
 import 'package:mobile_version/services/auth_storage_service.dart';
 import 'package:mobile_version/services/comment_service.dart';
@@ -104,6 +108,13 @@ class MyApp extends StatelessWidget {
                 manager: context.read<AuthStorageService>(),
               ),
         ),
+        RepositoryProvider<AuthenticatedDioNetworkSession>(
+          create:
+              (context) => AuthenticatedDioNetworkSession(
+                manager: context.read<AuthStorageService>(),
+                dio: Dio(),
+              ),
+        ),
         RepositoryProvider<ArticleService>(
           create:
               (context) => ArticleServiceImpl(
@@ -129,6 +140,12 @@ class MyApp extends StatelessWidget {
           create:
               (context) =>
                   PickImageServiceImpl(picker: context.read<AppImagePicker>()),
+        ),
+        RepositoryProvider<ArticleServiceManager>(
+          create:
+              (context) => ArticleServiceManagerImpl(
+                session: context.read<AuthenticatedDioNetworkSession>(),
+              ),
         ),
       ],
       child: MultiBlocProvider(
@@ -169,6 +186,12 @@ class MyApp extends StatelessWidget {
             create:
                 (context) =>
                     MyAccountBloc(service: context.read<AccountService>()),
+          ),
+          BlocProvider(
+            create:
+                (context) => CreateArticleBloc(
+                  service: context.read<ArticleServiceManager>(),
+                ),
           ),
         ],
         child: MaterialApp(

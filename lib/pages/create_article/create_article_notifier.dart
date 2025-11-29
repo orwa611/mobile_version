@@ -19,7 +19,7 @@ abstract class CreateArticleNotifier extends ChangeNotifier {
 
   void getImage();
   void removeImage();
-  void createArticle();
+  void createArticle(Function(ArticleRequest) callBack);
 
   void saveTag(String? value);
   void removeTag(String value);
@@ -31,7 +31,7 @@ final class CreateArticleNotifierImpl extends CreateArticleNotifier {
     title: '',
     content: '',
     tags: [],
-    image: '',
+    image: [],
   );
 
   CreateArticleNotifierImpl({
@@ -53,11 +53,12 @@ final class CreateArticleNotifierImpl extends CreateArticleNotifier {
   }
 
   @override
-  void createArticle() {
+  void createArticle(Function(ArticleRequest) callBack) {
     errorImage = null;
     final isValid = globalKey.currentState?.validate();
     if (isValid == true && image != null) {
       globalKey.currentState?.save();
+      callBack(request);
     } else if (image == null) {
       errorImage = 'Image is required ';
     }
@@ -67,15 +68,16 @@ final class CreateArticleNotifierImpl extends CreateArticleNotifier {
   @override
   void getImage() async {
     errorImage = null;
-    final getImage = await _service.getImage();
-    request.image = getImage;
-    image = getImage;
+    final model = await _service.getImage();
+    request.image = model.image;
+    request.imageName = model.name;
+    image = model.path;
     notifyListeners();
   }
 
   @override
   void removeImage() {
-    request.image = '';
+    request.image = [];
     image = null;
     notifyListeners();
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mobile_version/models/article_request.dart';
 import 'package:mobile_version/models/author_model.dart';
 import 'package:mobile_version/pages/create_article/create_article_notifier.dart';
 import 'package:mobile_version/widgets/author_picture_widget.dart';
@@ -11,11 +12,13 @@ class CreateArticlePage extends StatelessWidget {
   final Author author;
   final CreateArticleNotifier _notifier;
   final TextEditingController controller = TextEditingController();
+  final Function(ArticleRequest) onShare;
 
   CreateArticlePage({
     super.key,
     required this.author,
     required CreateArticleNotifier notifier,
+    required this.onShare,
   }) : _notifier = notifier;
 
   @override
@@ -98,7 +101,7 @@ class CreateArticlePage extends StatelessWidget {
                         ),
                         PrimaryButton(
                           onPressed: () {
-                            _notifier.createArticle();
+                            _notifier.createArticle(onShare);
                           },
                           title: 'Share',
                         ),

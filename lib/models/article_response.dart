@@ -237,6 +237,7 @@ class DetailArticleResponse {
       articleImage: image,
       authorImage: author.image,
       comments: comments.map((e) => e.toModel()).toList(),
+      tags: tags,
     );
   }
 }

@@ -89,6 +89,14 @@ class ArticlePage extends StatelessWidget {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    spacing: 10,
+                    children:
+                        article.tags.map((e) => Chip(label: Text(e))).toList(),
+                  ),
+                ),
                 Text(
                   'Comments',
                   style: TextStyle(

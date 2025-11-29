@@ -11,6 +11,7 @@ class ArticleDetail {
   final String articleImage;
   final String authorImage;
   final List<CommentModel> comments;
+  final List<String> tags;
 
   ArticleDetail({
     required this.id,
@@ -22,6 +23,7 @@ class ArticleDetail {
     required this.articleImage,
     required this.authorImage,
     required this.comments,
+    required this.tags,
   });
   String get fullName => '$firstName $lastName';
 

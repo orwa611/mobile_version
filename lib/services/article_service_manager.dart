@@ -8,18 +8,18 @@ abstract class ArticleServiceManager {
 }
 
 class ArticleServiceManagerImpl implements ArticleServiceManager {
-  final NetworkSession _service;
+  final NetworkSession _session;
 
-  ArticleServiceManagerImpl({required NetworkSession service})
-    : _service = service;
+  ArticleServiceManagerImpl({required NetworkSession session})
+    : _session = session;
   @override
   Future<ArticleResponse> createArticle(ArticleRequest request) async {
     try {
-      final result = await _service.post(
+      final result = await _session.post(
         '/article/add',
         body: request.toFormData(),
       );
-      return ArticleResponse.fromJson(result);
+      return ArticleResponse.fromJsonMyAccount(result);
     } on NetworkException catch (e) {
       throw e.toAppException();
     }

@@ -2,7 +2,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobile_version/core/exceptions/image_picker_exception.dart';
 
 abstract class AppImagePicker {
-  Future<String> getImage({ImageSource source});
+  Future<ImageModel> getImage({ImageSource source});
+}
+
+class ImageModel {
+  final String path;
+  final String name;
+  final List<int> image;
+
+  ImageModel({required this.name, required this.path, required this.image});
 }
 
 final class AppImagePickerImpl implements AppImagePicker {
@@ -11,11 +19,14 @@ final class AppImagePickerImpl implements AppImagePicker {
   AppImagePickerImpl({required this.picker});
 
   @override
-  Future<String> getImage({ImageSource source = ImageSource.gallery}) async {
+  Future<ImageModel> getImage({
+    ImageSource source = ImageSource.gallery,
+  }) async {
     try {
       final result = await picker.pickImage(source: source);
       if (result != null) {
-        return result.path;
+        final image = await result.readAsBytes();
+        return ImageModel(path: result.path, image: image, name: result.name);
       } else {
         throw ImageNotFoundException();
       }

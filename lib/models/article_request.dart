@@ -4,7 +4,7 @@ class ArticleRequest {
   String title;
   String content;
   List<String> tags;
-  String image;
+  List<int> image;
   String? imageName;
 
   ArticleRequest({
@@ -19,8 +19,8 @@ class ArticleRequest {
     final formData = FormData.fromMap({
       'title': title,
       'content': content,
-      'tag': tags,
-      'image': MultipartFile.fromFile(image, filename: imageName),
+      'tag': tags.join(','),
+      'image': MultipartFile.fromBytes(image, filename: imageName),
     });
 
     return formData;
