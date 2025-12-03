@@ -51,4 +51,14 @@ class AuthenticatedHttpNetworkSession implements NetworkSession {
       },
     );
   }
+
+  @override
+  Future put(
+    String path, {
+    Map<String, String> headers = const {},
+    Object? body,
+  }) {
+    // TODO: implement put
+    throw UnimplementedError();
+  }
 }
