@@ -6,10 +6,10 @@ abstract class CreateArticleNotifier extends ChangeNotifier {
   String? image;
   List<String>? tags;
   String? errorImage;
-
+  ArticleRequest request;
   final GlobalKey<FormState> globalKey;
 
-  CreateArticleNotifier({required this.globalKey});
+  CreateArticleNotifier({required this.globalKey, required this.request});
 
   String? validateTitle(String? value);
   void saveTitle(String? value);
@@ -27,17 +27,18 @@ abstract class CreateArticleNotifier extends ChangeNotifier {
 
 final class CreateArticleNotifierImpl extends CreateArticleNotifier {
   final PickImageService _service;
-  ArticleRequest request = ArticleRequest(
-    title: '',
-    content: '',
-    tags: [],
-    image: [],
-  );
 
   CreateArticleNotifierImpl({
     required super.globalKey,
+    ArticleRequest? request,
     required PickImageService service,
-  }) : _service = service;
+  }) : _service = service,
+       super(
+         request:
+             request ??
+             ArticleRequest(title: '', content: '', tags: [], image: []),
+       );
+
   @override
   String? validateTitle(String? value) {
     if (value != null && value.isNotEmpty) {

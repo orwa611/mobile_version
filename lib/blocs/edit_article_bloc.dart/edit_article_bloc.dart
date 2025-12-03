@@ -5,5 +5,9 @@ part 'edit_article_event.dart';
 part 'edit_article_state.dart';
 
 class EditArticleBloc extends Bloc<EditArticleEvent, EditArticleState> {
-  EditArticleBloc() : super(EditArticleInitialState());
+  EditArticleBloc() : super(EditArticleInitialState()) {
+    on<GetArticleToEditEvent>((event, emit) {
+      emit(EditArticleSuccessState(article: event.article));
+    });
+  }
 }

@@ -8,6 +8,7 @@ class InputField extends StatelessWidget {
   final void Function(String?)? onSaved;
   final TextEditingController? controller;
   final int? maxLine;
+  final String? initialValue;
 
   const InputField({
     super.key,
@@ -18,6 +19,7 @@ class InputField extends StatelessWidget {
     this.onSaved,
     this.controller,
     this.maxLine = 1,
+    this.initialValue,
   });
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class InputField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
+        initialValue: initialValue,
         maxLines: maxLine,
         controller: controller,
         onSaved: onSaved,
