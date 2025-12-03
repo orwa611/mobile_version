@@ -17,31 +17,54 @@ final class EditArticleNotifierImpl extends FormArticleNotifier {
 
   @override
   void createArticle(Function(ArticleRequest p1) callBack) {
-    // TODO: implement createArticle
+    errorImage = null;
+    final isValid = globalKey.currentState?.validate();
+    if (isValid != null && isValid && image != null) {
+      globalKey.currentState?.save();
+      callBack(request);
+    } else if (image == null) {
+      errorImage = 'Image is required ';
+    }
+    notifyListeners();
   }
 
   @override
-  void getImage() {
-    // TODO: implement getImage
+  void getImage() async {
+    final result = await _service.getImage();
+    image = result.path;
+    request.imageName = result.name;
+    request.image = result.image;
+    notifyListeners();
   }
 
   @override
   void removeImage() {
-    // TODO: implement removeImage
+    request.image = [];
+    image = null;
+    notifyListeners();
   }
 
   @override
   void removeTag(String value) {
-    // TODO: implement removeTag
+    request.tags.remove(value);
+    tags = request.tags;
+    notifyListeners();
   }
 
   @override
   void saveDescription(String? value) {
-    // TODO: implement saveDescription
+    request.content = value ?? '';
+    notifyListeners();
   }
 
   @override
-  void saveTag(String? value) {}
+  void saveTag(String? value) {
+    if (value != null && value.isNotEmpty) {
+      request.tags.add(value);
+    }
+    tags = request.tags;
+    notifyListeners();
+  }
 
   @override
   void saveTitle(String? value) {
@@ -51,13 +74,23 @@ final class EditArticleNotifierImpl extends FormArticleNotifier {
 
   @override
   String? validateDescription(String? value) {
-    // TODO: implement validateDescription
-    throw UnimplementedError();
+    if (value != null && value.isNotEmpty) {
+      if (value.length > 500) {
+        return null;
+      } else {
+        return 'Content must contain at least 500 character';
+      }
+    } else {
+      return 'Content is required';
+    }
   }
 
   @override
   String? validateTitle(String? value) {
-    // TODO: implement validateTitle
-    throw UnimplementedError();
+    if (value != null && value.isNotEmpty) {
+      return null;
+    } else {
+      return 'Title is required';
+    }
   }
 }

@@ -25,6 +25,7 @@ final class CreateArticlePageFactory {
                 context.snackBar(
                   'Article Created Successfully, wait for APPROVAL!',
                 );
+                Navigator.of(context).pop();
               }
             },
             builder: (context, createArticleState) {
