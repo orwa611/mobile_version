@@ -9,14 +9,14 @@ import 'package:mobile_version/widgets/primary_button.dart';
 class CreateArticlePage extends StatelessWidget {
   static const String route = '/create_article_page';
   final Author author;
-  final CreateArticleNotifier _notifier;
+  final FormArticleNotifier _notifier;
   final Function(ArticleRequest) onShare;
   final bool isEdit;
 
   CreateArticlePage({
     super.key,
     required this.author,
-    required CreateArticleNotifier notifier,
+    required FormArticleNotifier notifier,
     required this.onShare,
     this.isEdit = false,
   }) : _notifier = notifier;

@@ -2,16 +2,15 @@ import 'package:mobile_version/models/article_request.dart';
 import 'package:mobile_version/pages/create_article/create_article_notifier.dart';
 import 'package:mobile_version/services/pick_image_service.dart';
 
-final class EditArticleNotifierImpl extends CreateArticleNotifier {
+final class EditArticleNotifierImpl extends FormArticleNotifier {
   final PickImageService _service;
 
   EditArticleNotifierImpl({
     required super.globalKey,
+    required super.request,
     required PickImageService service,
-    required ArticleRequest request,
     String? imageUrl,
-  }) : _service = service,
-       super(request: request) {
+  }) : _service = service {
     tags = request.tags;
     image = imageUrl;
   }
