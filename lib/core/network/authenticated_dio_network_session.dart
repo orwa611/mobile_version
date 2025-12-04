@@ -61,6 +61,34 @@ final class AuthenticatedDioNetworkSession implements NetworkSession {
       throw ServerException(url: path);
     }
   }
+
+  @override
+  Future put(
+    String path, {
+    Map<String, String> headers = const {},
+    Object? body,
+  }) async {
+    try {
+      final response = await dio.put(
+        path,
+        options: Options(headers: headers),
+        data: body,
+      );
+      if (NetworkConstants.statusCodes.contains(response.statusCode)) {
+        return response.data;
+      } else {
+        throw HttpResponseException(
+          url: path,
+          errorResponse: ErrorResponse.fromJson(response.data),
+          statusCode: response.statusCode ?? -1,
+        );
+      }
+    } on HttpResponseException catch (_) {
+      rethrow;
+    } catch (_) {
+      throw ServerException(url: path);
+    }
+  }
 }
 
 final class AuthorizationInterceptor extends Interceptor {

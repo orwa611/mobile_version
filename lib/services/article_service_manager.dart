@@ -5,6 +5,7 @@ import 'package:mobile_version/models/article_response.dart';
 
 abstract class ArticleServiceManager {
   Future<ArticleResponse> createArticle(ArticleRequest request);
+  Future<ArticleResponse> editArticle(ArticleRequest request, String id);
 }
 
 class ArticleServiceManagerImpl implements ArticleServiceManager {
@@ -17,6 +18,19 @@ class ArticleServiceManagerImpl implements ArticleServiceManager {
     try {
       final result = await _session.post(
         '/article/add',
+        body: request.toFormData(),
+      );
+      return ArticleResponse.fromJsonMyAccount(result);
+    } on NetworkException catch (e) {
+      throw e.toAppException();
+    }
+  }
+
+  @override
+  Future<ArticleResponse> editArticle(ArticleRequest request, String id) async {
+    try {
+      final result = await _session.put(
+        '/article/update/$id',
         body: request.toFormData(),
       );
       return ArticleResponse.fromJsonMyAccount(result);

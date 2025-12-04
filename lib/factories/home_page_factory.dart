@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_version/blocs/article_bloc/article_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
+import 'package:mobile_version/blocs/edit_article_bloc.dart/edit_article_bloc.dart';
 import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
 import 'package:mobile_version/blocs/user_bloc/user_bloc.dart';
+import 'package:mobile_version/factories/edit_article_page_factory.dart';
+import 'package:mobile_version/models/article_model.dart';
 import 'package:mobile_version/pages/article_page.dart';
 import 'package:mobile_version/pages/author_page.dart';
 import 'package:mobile_version/pages/create_article/create_article_page.dart';
@@ -34,6 +37,9 @@ final class HomePageFactory {
       listener: (context, state) {
         if (state is UserStateLoggedIn) {
           context.read<MyAccountBloc>().add(GetMyAccountEvent());
+        }
+        if (state is UserStateLoggedOut) {
+          context.read<MyAccountBloc>().add(UnauthenticatedMyAccountEvent());
         }
       },
       builder: (context, userState) {
@@ -153,7 +159,7 @@ final class HomePageFactory {
                 Navigator.of(context).pushNamed(ArticlePage.route);
               },
               author: state.author,
-              showActionsSheet: (String id) {
+              showActionsSheet: (Article article) {
                 showModalBottomSheet(
                   context: context,
                   builder: (context) {
@@ -165,7 +171,15 @@ final class HomePageFactory {
                           child: Column(
                             children: [
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  context.read<EditArticleBloc>().add(
+                                    GetArticleToEditEvent(article: article),
+                                  );
+
+                                  Navigator.of(context).popAndPushNamed(
+                                    EditArticlePageFactory.route,
+                                  );
+                                },
                                 icon: Row(
                                   spacing: 8,
                                   children: [
@@ -177,7 +191,7 @@ final class HomePageFactory {
                               IconButton(
                                 onPressed: () {
                                   context.read<MyAccountBloc>().add(
-                                    DeleteMyArticleEvent(id: id),
+                                    DeleteMyArticleEvent(id: article.id),
                                   );
                                 },
                                 icon: Row(

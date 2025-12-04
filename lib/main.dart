@@ -7,7 +7,8 @@ import 'package:mobile_version/blocs/article_bloc/article_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
 import 'package:mobile_version/blocs/auth_bloc/auth_bloc.dart';
 import 'package:mobile_version/blocs/comment_bloc.dart/comment_bloc.dart';
-import 'package:mobile_version/blocs/create_article_bloc/create_article_bloc.dart';
+import 'package:mobile_version/blocs/form_article_bloc/form_article_bloc.dart';
+import 'package:mobile_version/blocs/edit_article_bloc.dart/edit_article_bloc.dart';
 import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
 import 'package:mobile_version/blocs/register_bloc/register_bloc.dart';
 import 'package:mobile_version/blocs/user_bloc/user_bloc.dart';
@@ -20,6 +21,7 @@ import 'package:mobile_version/core/storage/storage_session.dart';
 import 'package:mobile_version/factories/article_page_factory.dart';
 import 'package:mobile_version/factories/author_page_factory.dart';
 import 'package:mobile_version/factories/create_article_page_factory.dart';
+import 'package:mobile_version/factories/edit_article_page_factory.dart';
 import 'package:mobile_version/factories/home_page_factory.dart';
 import 'package:mobile_version/factories/login_page_factory.dart';
 import 'package:mobile_version/factories/register_page_factory.dart';
@@ -189,10 +191,11 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create:
-                (context) => CreateArticleBloc(
+                (context) => FormArticleBloc(
                   service: context.read<ArticleServiceManager>(),
                 ),
           ),
+          BlocProvider(create: (context) => EditArticleBloc()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -204,6 +207,8 @@ class MyApp extends StatelessWidget {
             AuthorPage.route: AuthorPageFactory.buildAuthorPage,
             CreateArticlePage.route:
                 CreateArticlePageFactory.buildCreateArticlePage,
+            EditArticlePageFactory.route:
+                EditArticlePageFactory.buildEditArticlePage,
           },
         ),
       ),

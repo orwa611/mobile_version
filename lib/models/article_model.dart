@@ -4,6 +4,7 @@ class Article {
   final String id;
   final String title;
   final String description;
+  final List<String> tags;
   final String firstName;
   final String lastName;
   final String authorId;
@@ -16,6 +17,7 @@ class Article {
     required this.authorId,
     required this.title,
     required this.description,
+    required this.tags,
     required this.firstName,
     required this.lastName,
     required this.createdAt,

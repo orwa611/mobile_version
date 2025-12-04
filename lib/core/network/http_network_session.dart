@@ -87,4 +87,13 @@ class HttpNetworkSession implements NetworkSession {
       throw ServerException(url: url.toString());
     }
   }
+
+  @override
+  Future put(
+    String path, {
+    Map<String, String> headers = const {},
+    Object? body,
+  }) {
+    throw UnimplementedError();
+  }
 }

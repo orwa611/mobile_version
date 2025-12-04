@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:mobile_version/models/article_request.dart';
 import 'package:mobile_version/services/pick_image_service.dart';
 
-abstract class CreateArticleNotifier extends ChangeNotifier {
+abstract class FormArticleNotifier extends ChangeNotifier {
   String? image;
   List<String>? tags;
   String? errorImage;
-
+  ArticleRequest request;
   final GlobalKey<FormState> globalKey;
 
-  CreateArticleNotifier({required this.globalKey});
+  FormArticleNotifier({required this.globalKey, required this.request});
 
   String? validateTitle(String? value);
   void saveTitle(String? value);
@@ -25,19 +25,17 @@ abstract class CreateArticleNotifier extends ChangeNotifier {
   void removeTag(String value);
 }
 
-final class CreateArticleNotifierImpl extends CreateArticleNotifier {
+final class CreateArticleNotifierImpl extends FormArticleNotifier {
   final PickImageService _service;
-  ArticleRequest request = ArticleRequest(
-    title: '',
-    content: '',
-    tags: [],
-    image: [],
-  );
 
   CreateArticleNotifierImpl({
     required super.globalKey,
     required PickImageService service,
-  }) : _service = service;
+  }) : _service = service,
+       super(
+         request: ArticleRequest(title: '', content: '', tags: [], image: []),
+       );
+
   @override
   String? validateTitle(String? value) {
     if (value != null && value.isNotEmpty) {

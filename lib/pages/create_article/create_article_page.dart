@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mobile_version/models/article_request.dart';
 import 'package:mobile_version/models/author_model.dart';
 import 'package:mobile_version/pages/create_article/create_article_notifier.dart';
@@ -10,21 +9,24 @@ import 'package:mobile_version/widgets/primary_button.dart';
 class CreateArticlePage extends StatelessWidget {
   static const String route = '/create_article_page';
   final Author author;
-  final CreateArticleNotifier _notifier;
-  final TextEditingController controller = TextEditingController();
+  final FormArticleNotifier _notifier;
   final Function(ArticleRequest) onShare;
+  final bool isEdit;
 
   CreateArticlePage({
     super.key,
     required this.author,
-    required CreateArticleNotifier notifier,
+    required FormArticleNotifier notifier,
     required this.onShare,
+    this.isEdit = false,
   }) : _notifier = notifier;
+
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Create post')),
+      appBar: AppBar(title: Text((isEdit) ? 'Edit post' : 'Create post')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -56,6 +58,7 @@ class CreateArticlePage extends StatelessWidget {
                       children: [
                         InputField(
                           hintText: 'Title :',
+                          initialValue: _notifier.request.title,
                           validator: _notifier.validateTitle,
                           onSaved: _notifier.saveTitle,
                         ),
@@ -94,6 +97,7 @@ class CreateArticlePage extends StatelessWidget {
                           ],
                         ),
                         InputField(
+                          initialValue: _notifier.request.content,
                           hintText: 'type your content',
                           maxLine: 5,
                           onSaved: _notifier.saveDescription,
@@ -103,7 +107,7 @@ class CreateArticlePage extends StatelessWidget {
                           onPressed: () {
                             _notifier.createArticle(onShare);
                           },
-                          title: 'Share',
+                          title: (isEdit) ? 'Edit' : 'Share',
                         ),
                         SizedBox(height: 20),
                       ],

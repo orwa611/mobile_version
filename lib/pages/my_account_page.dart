@@ -7,7 +7,7 @@ class MyAccountPage extends StatelessWidget {
   final List<Article> articles;
   final Author author;
   final void Function(Article) onGoToArticle;
-  final void Function(String id) showActionsSheet;
+  final void Function(Article article) showActionsSheet;
   static const String route = '/myAccount';
 
   const MyAccountPage({
@@ -56,7 +56,7 @@ class MyAccountPage extends StatelessWidget {
             onGoToArticle: onGoToArticle,
             shouldDisplayActions: true,
             onTapActionsButton: (article) {
-              showActionsSheet(article.id);
+              showActionsSheet(article);
             },
           ),
         ],
