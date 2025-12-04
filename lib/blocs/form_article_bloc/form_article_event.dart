@@ -12,5 +12,5 @@ class EditArticleEvent implements FormArticleEvent {
   final ArticleRequest request;
   final String id;
 
-  EditArticleEvent(this.id, {required this.request});
+  EditArticleEvent({required this.request, required this.id});
 }

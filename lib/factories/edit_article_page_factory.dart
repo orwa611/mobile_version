@@ -35,7 +35,7 @@ final class EditArticlePageFactory {
 
                   onShare: (request) {
                     context.read<FormArticleBloc>().add(
-                      ShareArticleEvent(request: request),
+                      EditArticleEvent(id: article.id, request: request),
                     );
                   },
                   isEdit: true,

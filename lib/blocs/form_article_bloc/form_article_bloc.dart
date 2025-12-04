@@ -20,6 +20,14 @@ class FormArticleBloc extends Bloc<FormArticleEvent, FormArticleState> {
         emit(FormArticleErrorState(errorMessage: e.message));
       }
     });
-    on<EditArticleEvent>((event, emit) async {});
+    on<EditArticleEvent>((event, emit) async {
+      emit(FormArticleLoadingState());
+      try {
+        await _service.editArticle(event.request, event.id);
+        emit(FormArticleSuccessState());
+      } on AppException catch (e) {
+        emit(FormArticleErrorState(errorMessage: e.message));
+      }
+    });
   }
 }
