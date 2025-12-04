@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mobile_version/blocs/create_article_bloc/create_article_bloc.dart';
+import 'package:mobile_version/blocs/form_article_bloc/form_article_bloc.dart';
 import 'package:mobile_version/blocs/edit_article_bloc.dart/edit_article_bloc.dart';
 import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
 import 'package:mobile_version/models/article_request.dart';
@@ -34,7 +34,7 @@ final class EditArticlePageFactory {
                   notifier: notifier,
 
                   onShare: (request) {
-                    context.read<CreateArticleBloc>().add(
+                    context.read<FormArticleBloc>().add(
                       ShareArticleEvent(request: request),
                     );
                   },
