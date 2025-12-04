@@ -38,6 +38,9 @@ final class HomePageFactory {
         if (state is UserStateLoggedIn) {
           context.read<MyAccountBloc>().add(GetMyAccountEvent());
         }
+        if (state is UserStateLoggedOut) {
+          context.read<MyAccountBloc>().add(UnauthenticatedMyAccountEvent());
+        }
       },
       builder: (context, userState) {
         final isLoggedIn = userState is UserStateLoggedIn;
@@ -172,9 +175,10 @@ final class HomePageFactory {
                                   context.read<EditArticleBloc>().add(
                                     GetArticleToEditEvent(article: article),
                                   );
-                                  Navigator.of(
-                                    context,
-                                  ).pushNamed(EditArticlePageFactory.route);
+
+                                  Navigator.of(context).popAndPushNamed(
+                                    EditArticlePageFactory.route,
+                                  );
                                 },
                                 icon: Row(
                                   spacing: 8,
