@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_version/blocs/form_article_bloc/form_article_bloc.dart';
 import 'package:mobile_version/blocs/edit_article_bloc.dart/edit_article_bloc.dart';
 import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
+import 'package:mobile_version/core/extensions/context_extension.dart';
 import 'package:mobile_version/models/article_request.dart';
 import 'package:mobile_version/pages/create_article/create_article_page.dart';
 import 'package:mobile_version/pages/create_article/edit_article_notifier_impl.dart';
@@ -29,16 +30,37 @@ final class EditArticlePageFactory {
                     image: [],
                   ),
                 );
-                return CreateArticlePage(
-                  author: myAccountState.author,
-                  notifier: notifier,
+                return BlocConsumer<FormArticleBloc, FormArticleState>(
+                  listener: (context, formState) {
+                    if (formState is FormArticleSuccessState) {
+                      context.read<MyAccountBloc>().add(GetMyAccountEvent());
 
-                  onShare: (request) {
-                    context.read<FormArticleBloc>().add(
-                      EditArticleEvent(id: article.id, request: request),
+                      context.snackBar(
+                        'Your Article is Edited Successfully',
+                        status: SnackBarStatus.success,
+                      );
+                      Navigator.of(context).pop();
+                    }
+                    if (formState is FormArticleErrorState) {
+                      context.snackBar(
+                        formState.errorMessage,
+                        status: SnackBarStatus.error,
+                      );
+                    }
+                  },
+                  builder: (context, formState) {
+                    return CreateArticlePage(
+                      author: myAccountState.author,
+                      notifier: notifier,
+
+                      onShare: (request) {
+                        context.read<FormArticleBloc>().add(
+                          EditArticleEvent(id: article.id, request: request),
+                        );
+                      },
+                      isEdit: true,
                     );
                   },
-                  isEdit: true,
                 );
               }
               return SizedBox.shrink();
