@@ -7,6 +7,7 @@ class MyAccountPage extends StatelessWidget {
   final List<Article> articles;
   final Author author;
   final void Function(Article) onGoToArticle;
+  final void Function(Author) onGoToEditProfile;
   final void Function(Article article) showActionsSheet;
   static const String route = '/myAccount';
 
@@ -16,6 +17,7 @@ class MyAccountPage extends StatelessWidget {
     required this.onGoToArticle,
     required this.author,
     required this.showActionsSheet,
+    required this.onGoToEditProfile,
   });
 
   @override
@@ -42,9 +44,22 @@ class MyAccountPage extends StatelessWidget {
                     },
                   ),
                 ),
-                Text(
-                  'Jhon Doe',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                Stack(
+                  children: [
+                    Text(
+                      'Jhon Doe',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        onGoToEditProfile(author);
+                      },
+                      icon: Icon(Icons.edit),
+                    ),
+                  ],
                 ),
                 Text('Bio/about'),
                 Text('Published post: ${author.numberOfPosts}'),

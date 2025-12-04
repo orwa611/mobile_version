@@ -28,6 +28,7 @@ import 'package:mobile_version/factories/register_page_factory.dart';
 import 'package:mobile_version/pages/article_page.dart';
 import 'package:mobile_version/pages/author_page.dart';
 import 'package:mobile_version/pages/create_article/create_article_page.dart';
+import 'package:mobile_version/pages/edit_profile_page.dart';
 import 'package:mobile_version/pages/login/login_page.dart';
 import 'package:mobile_version/pages/register/register_page.dart';
 import 'package:mobile_version/services/account_service.dart';
@@ -209,6 +210,9 @@ class MyApp extends StatelessWidget {
                 CreateArticlePageFactory.buildCreateArticlePage,
             EditArticlePageFactory.route:
                 EditArticlePageFactory.buildEditArticlePage,
+            EditProfilePage.route: (context) {
+              return EditProfilePage();
+            },
           },
         ),
       ),

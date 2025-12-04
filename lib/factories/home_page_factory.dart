@@ -10,6 +10,7 @@ import 'package:mobile_version/models/article_model.dart';
 import 'package:mobile_version/pages/article_page.dart';
 import 'package:mobile_version/pages/author_page.dart';
 import 'package:mobile_version/pages/create_article/create_article_page.dart';
+import 'package:mobile_version/pages/edit_profile_page.dart';
 import 'package:mobile_version/pages/home_page.dart';
 import 'package:mobile_version/pages/login/login_page.dart';
 import 'package:mobile_version/pages/my_account_page.dart';
@@ -209,6 +210,9 @@ final class HomePageFactory {
                     );
                   },
                 );
+              },
+              onGoToEditProfile: (author) {
+                Navigator.of(context).pushNamed(EditProfilePage.route);
               },
             );
           }
