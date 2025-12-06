@@ -1,8 +1,8 @@
 final class UpdateProfileModel {
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String bio;
+  String firstName;
+  String lastName;
+  String email;
+  String bio;
 
   UpdateProfileModel({
     required this.firstName,
