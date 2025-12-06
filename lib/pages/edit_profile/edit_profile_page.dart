@@ -1,0 +1,97 @@
+import 'package:flutter/material.dart';
+import 'package:mobile_version/pages/edit_profile/edit_profile_notifier.dart';
+import 'package:mobile_version/pages/edit_profile/update_profile_model.dart';
+import 'package:mobile_version/widgets/input_field.dart';
+import 'package:mobile_version/widgets/primary_button.dart';
+
+class EditProfilePage extends StatefulWidget {
+  static const String route = '/edit_profile';
+  final EditProfileNotifier notifier;
+  final bool isLoading;
+  final Function(UpdateProfileModel) onUpdate;
+
+  const EditProfilePage({
+    super.key,
+    required this.notifier,
+    required this.isLoading,
+    required this.onUpdate,
+  });
+
+  @override
+  State<EditProfilePage> createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<EditProfilePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.asset('logo.png', height: 40),
+            SizedBox(height: 48.0),
+            ListenableBuilder(
+              listenable: widget.notifier,
+              builder: (context, _) {
+                return Form(
+                  key: widget.notifier.globalKey,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 28.0, right: 28.0),
+                    child: Column(
+                      spacing: 12,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Edit your Profile',
+                          style: TextStyle(fontSize: 26),
+                        ),
+                        InputField(
+                          initialValue: widget.notifier.model.firstName,
+                          hintText: 'First name',
+                          validator: widget.notifier.validateFirstName,
+                          onSaved: widget.notifier.saveFirstName,
+                        ),
+                        InputField(
+                          initialValue: widget.notifier.model.lastName,
+                          hintText: 'Last name',
+                          validator: widget.notifier.validateLastName,
+                          onSaved: widget.notifier.saveLastName,
+                        ),
+                        InputField(
+                          initialValue: widget.notifier.model.email,
+                          hintText: 'Email',
+                          keyboardType: TextInputType.emailAddress,
+                          validator: widget.notifier.validateEmail,
+                          onSaved: widget.notifier.saveEmail,
+                        ),
+                        InputField(
+                          initialValue: widget.notifier.model.bio,
+                          hintText: 'Bio',
+                          validator: widget.notifier.validateBio,
+                          onSaved: widget.notifier.saveBio,
+                        ),
+
+                        PrimaryButton(
+                          onPressed:
+                              widget.isLoading
+                                  ? null
+                                  : () {
+                                    widget.notifier.updateProfile(
+                                      widget.onUpdate,
+                                    );
+                                  },
+                          title: 'Edit',
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

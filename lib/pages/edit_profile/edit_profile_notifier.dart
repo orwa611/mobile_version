@@ -4,8 +4,8 @@ import 'package:mobile_version/pages/edit_profile/update_profile_model.dart';
 
 abstract class EditProfileNotifier extends ChangeNotifier {
   final GlobalKey<FormState> globalKey;
-
-  EditProfileNotifier({required this.globalKey});
+  UpdateProfileModel model;
+  EditProfileNotifier({required this.globalKey, required this.model});
 
   String? validateFirstName(String? value);
   void saveFirstName(String? value);
@@ -20,8 +20,7 @@ abstract class EditProfileNotifier extends ChangeNotifier {
 }
 
 class EditProfileNotifierImpl extends EditProfileNotifier {
-  UpdateProfileModel model;
-  EditProfileNotifierImpl({required super.globalKey, required this.model});
+  EditProfileNotifierImpl({required super.globalKey, required super.model});
 
   @override
   void saveFirstName(String? value) {
