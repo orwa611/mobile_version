@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class AuthorPage extends StatefulWidget {
   static const String route = '/author';

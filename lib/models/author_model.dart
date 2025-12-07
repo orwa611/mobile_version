@@ -5,10 +5,12 @@ class Author {
   final String lastName;
   final String about;
   final String image;
+  final String email;
   final int numberOfPosts;
 
   Author({
     required this.firstName,
+    required this.email,
     required this.lastName,
     required this.about,
     required this.image,

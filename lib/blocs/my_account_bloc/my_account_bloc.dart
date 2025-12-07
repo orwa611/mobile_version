@@ -50,6 +50,7 @@ class MyAccountBloc extends Bloc<MyAccountEvent, MyAccountState> {
             about: author.about,
             image: author.image,
             numberOfPosts: author.numberOfPosts - 1,
+            email: author.email,
           );
           emit(MyAccountStateSuccess(articles: newArticles, author: newAuthor));
         } else {

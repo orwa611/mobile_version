@@ -213,18 +213,25 @@ class MyApp extends StatelessWidget {
             EditArticlePageFactory.route:
                 EditArticlePageFactory.buildEditArticlePage,
             EditProfilePage.route: (context) {
-              return EditProfilePage(
-                notifier: EditProfileNotifierImpl(
-                  globalKey: GlobalKey(),
-                  model: UpdateProfileModel(
-                    firstName: 'firstName',
-                    lastName: 'lastName',
-                    email: 'email',
-                    bio: 'bio',
-                  ),
-                ),
-                isLoading: false,
-                onUpdate: (model) {},
+              return BlocBuilder<MyAccountBloc, MyAccountState>(
+                builder: (context, state) {
+                  if (state is MyAccountStateSuccess) {
+                    return EditProfilePage(
+                      notifier: EditProfileNotifierImpl(
+                        globalKey: GlobalKey(),
+                        model: UpdateProfileModel(
+                          firstName: state.author.firstName,
+                          lastName: state.author.lastName,
+                          email: state.author.email,
+                          bio: state.author.about,
+                        ),
+                      ),
+                      isLoading: false,
+                      onUpdate: (model) {},
+                    );
+                  }
+                  return SizedBox.shrink();
+                },
               );
             },
           },
