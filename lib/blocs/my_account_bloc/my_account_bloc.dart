@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_version/core/exceptions/app_exception.dart';
 import 'package:mobile_version/models/article_model.dart';
 import 'package:mobile_version/models/author_model.dart';
+import 'package:mobile_version/pages/edit_profile/update_profile_model.dart';
 import 'package:mobile_version/services/account_service.dart';
 part 'my_account_event.dart';
 part 'my_account_state.dart';
@@ -45,6 +46,7 @@ class MyAccountBloc extends Bloc<MyAccountEvent, MyAccountState> {
           final newArticles =
               articles.where((article) => article.id != event.id).toList();
           final newAuthor = Author(
+            id: author.id,
             firstName: author.firstName,
             lastName: author.lastName,
             about: author.about,
@@ -62,6 +64,31 @@ class MyAccountBloc extends Bloc<MyAccountEvent, MyAccountState> {
       emit(
         MyAccountStateUnauthenticated(errorMessage: 'you are not Logged in'),
       );
+    });
+    on<UpdateMyAccountEvent>((event, emit) async {
+      final articles = (state as MyAccountStateSuccess).articles;
+      final oldAuthor = (state as MyAccountStateSuccess).author;
+      emit(MyAccountStateLoading());
+      try {
+        final newAuthor = await _service.updateMyAccount(event.author);
+
+        emit(
+          MyAccountStateSuccess(
+            articles: articles,
+            author: Author(
+              id: newAuthor.id,
+              firstName: newAuthor.firstName,
+              email: newAuthor.email ?? oldAuthor.email,
+              lastName: newAuthor.lastName,
+              about: newAuthor.about ?? oldAuthor.about,
+              image: newAuthor.image,
+              numberOfPosts: oldAuthor.numberOfPosts,
+            ),
+          ),
+        );
+      } on AppException catch (e) {
+        emit(MyAccountStateError(errorMessage: e.message));
+      }
     });
   }
 }

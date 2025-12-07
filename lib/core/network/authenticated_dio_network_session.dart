@@ -29,9 +29,26 @@ final class AuthenticatedDioNetworkSession implements NetworkSession {
   }
 
   @override
-  Future<dynamic> get(String path, {Map<String, String> headers = const {}}) {
-    // TODO: implement get
-    throw UnimplementedError();
+  Future get(
+    String path, {
+    Map<String, String> headers = const {"Content-Type": "application/json"},
+  }) async {
+    try {
+      final response = await dio.get(path, options: Options(headers: headers));
+      if (NetworkConstants.statusCodes.contains(response.statusCode)) {
+        return response.data;
+      } else {
+        throw HttpResponseException(
+          url: path,
+          errorResponse: ErrorResponse.fromJson(response.data),
+          statusCode: response.statusCode ?? -1,
+        );
+      }
+    } on HttpResponseException catch (_) {
+      rethrow;
+    } catch (_) {
+      throw ServerException(url: path);
+    }
   }
 
   @override

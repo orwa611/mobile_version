@@ -129,7 +129,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<AccountService>(
           create:
               (context) => AccountServiceImpl(
-                session: context.read<AuthenticatedHttpNetworkSession>(),
+                session: context.read<AuthenticatedDioNetworkSession>(),
               ),
         ),
         RepositoryProvider<CommentService>(
@@ -227,7 +227,12 @@ class MyApp extends StatelessWidget {
                         ),
                       ),
                       isLoading: false,
-                      onUpdate: (model) {},
+                      onUpdate: (model) {
+                        context.read<MyAccountBloc>().add(
+                          UpdateMyAccountEvent(author: model),
+                        );
+                        Navigator.of(context).pop();
+                      },
                     );
                   }
                   return SizedBox.shrink();

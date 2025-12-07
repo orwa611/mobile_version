@@ -11,3 +11,9 @@ class DeleteMyArticleEvent extends MyAccountEvent {
 }
 
 class UnauthenticatedMyAccountEvent extends MyAccountEvent {}
+
+class UpdateMyAccountEvent extends MyAccountEvent {
+  final UpdateProfileModel author;
+
+  UpdateMyAccountEvent({required this.author});
+}

@@ -47,7 +47,7 @@ class MyAccountPage extends StatelessWidget {
                 Stack(
                   children: [
                     Text(
-                      'Jhon Doe',
+                      author.fullName,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -61,7 +61,7 @@ class MyAccountPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text('Bio/about'),
+                Text(author.about),
                 Text('Published post: ${author.numberOfPosts}'),
               ],
             ),

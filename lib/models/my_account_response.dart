@@ -27,6 +27,7 @@ class MyAccountResponse {
 
   Author toAuthor() {
     return Author(
+      id: author.id,
       firstName: author.firstName,
       lastName: author.lastName,
       email: author.email ?? '',
