@@ -30,64 +30,86 @@ class _EditProfilePageState extends State<EditProfilePage> {
         child: Column(
           children: [
             Image.asset('logo.png', height: 40),
-            SizedBox(height: 48.0),
-            ListenableBuilder(
-              listenable: widget.notifier,
-              builder: (context, _) {
-                return Form(
-                  key: widget.notifier.globalKey,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 28.0, right: 28.0),
-                    child: Column(
-                      spacing: 12,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Edit your Profile',
-                          style: TextStyle(fontSize: 26),
-                        ),
-                        InputField(
-                          initialValue: widget.notifier.model.firstName,
-                          hintText: 'First name',
-                          validator: widget.notifier.validateFirstName,
-                          onSaved: widget.notifier.saveFirstName,
-                        ),
-                        InputField(
-                          initialValue: widget.notifier.model.lastName,
-                          hintText: 'Last name',
-                          validator: widget.notifier.validateLastName,
-                          onSaved: widget.notifier.saveLastName,
-                        ),
-                        InputField(
-                          initialValue: widget.notifier.model.email,
-                          hintText: 'Email',
-                          keyboardType: TextInputType.emailAddress,
-                          validator: widget.notifier.validateEmail,
-                          onSaved: widget.notifier.saveEmail,
-                        ),
-                        InputField(
-                          initialValue: widget.notifier.model.bio,
-                          hintText: 'Bio',
-                          validator: widget.notifier.validateBio,
-                          onSaved: widget.notifier.saveBio,
-                        ),
+            ExpansionTile(
+              title: Text('Edit your Profile', style: TextStyle(fontSize: 26)),
+              children: [
+                ListenableBuilder(
+                  listenable: widget.notifier,
+                  builder: (context, _) {
+                    return Form(
+                      key: widget.notifier.globalKey,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 28.0, right: 28.0),
+                        child: Column(
+                          spacing: 12,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InputField(
+                              initialValue: widget.notifier.model.firstName,
+                              hintText: 'First name',
+                              validator: widget.notifier.validateFirstName,
+                              onSaved: widget.notifier.saveFirstName,
+                            ),
+                            InputField(
+                              initialValue: widget.notifier.model.lastName,
+                              hintText: 'Last name',
+                              validator: widget.notifier.validateLastName,
+                              onSaved: widget.notifier.saveLastName,
+                            ),
+                            InputField(
+                              initialValue: widget.notifier.model.email,
+                              hintText: 'Email',
+                              keyboardType: TextInputType.emailAddress,
+                              validator: widget.notifier.validateEmail,
+                              onSaved: widget.notifier.saveEmail,
+                            ),
+                            InputField(
+                              initialValue: widget.notifier.model.bio,
+                              hintText: 'Bio',
+                              validator: widget.notifier.validateBio,
+                              onSaved: widget.notifier.saveBio,
+                            ),
 
-                        PrimaryButton(
-                          onPressed:
-                              widget.isLoading
-                                  ? null
-                                  : () {
-                                    widget.notifier.updateProfile(
-                                      widget.onUpdate,
-                                    );
-                                  },
-                          title: 'Edit',
+                            PrimaryButton(
+                              onPressed:
+                                  widget.isLoading
+                                      ? null
+                                      : () {
+                                        widget.notifier.updateProfile(
+                                          widget.onUpdate,
+                                        );
+                                      },
+                              title: 'Edit',
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            ExpansionTile(
+              title: Text('Change Password', style: TextStyle(fontSize: 26)),
+              children: [
+                ListenableBuilder(
+                  listenable: widget.notifier,
+                  builder: (context, _) {
+                    return Form(
+                      child: Column(
+                        children: [
+                          InputField(hintText: 'Current password'),
+                          InputField(hintText: 'New password'),
+                          PrimaryButton(
+                            onPressed: () {},
+                            title: 'change password',
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ],
         ),
