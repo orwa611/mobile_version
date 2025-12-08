@@ -66,7 +66,10 @@ class ChangePasswordNotifierImpl extends ChangePasswordNotifier {
   @override
   String? validatenewPassword(String? value) {
     if (value != null && value.isNotEmpty) {
-      return null;
+      if (value.length > 6) {
+        return null;
+      }
+      return 'your new password must contain more than 6 characters';
     }
     return 'your new password is required';
   }
