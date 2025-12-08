@@ -44,7 +44,8 @@ class MyAccountPage extends StatelessWidget {
                     },
                   ),
                 ),
-                Stack(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       author.fullName,
