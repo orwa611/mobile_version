@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_version/models/password_model.dart';
+import 'package:mobile_version/pages/edit_profile/change_password_notifier.dart';
 import 'package:mobile_version/pages/edit_profile/edit_profile_notifier.dart';
 import 'package:mobile_version/pages/edit_profile/update_profile_model.dart';
 import 'package:mobile_version/widgets/input_field.dart';
@@ -7,14 +9,18 @@ import 'package:mobile_version/widgets/primary_button.dart';
 class EditProfilePage extends StatefulWidget {
   static const String route = '/edit_profile';
   final EditProfileNotifier notifier;
+  final ChangePasswordNotifier passwordNotifier;
   final bool isLoading;
   final Function(UpdateProfileModel) onUpdate;
+  final Function(PasswordModel) onChange;
 
   const EditProfilePage({
     super.key,
     required this.notifier,
     required this.isLoading,
     required this.onUpdate,
+    required this.passwordNotifier,
+    required this.onChange,
   });
 
   @override
@@ -93,15 +99,43 @@ class _EditProfilePageState extends State<EditProfilePage> {
               title: Text('Change Password', style: TextStyle(fontSize: 26)),
               children: [
                 ListenableBuilder(
-                  listenable: widget.notifier,
+                  listenable: widget.passwordNotifier,
                   builder: (context, _) {
                     return Form(
+                      key: widget.passwordNotifier.globalKey,
                       child: Column(
                         children: [
-                          InputField(hintText: 'Current password'),
-                          InputField(hintText: 'New password'),
+                          InputField(
+                            hintText: 'Current password',
+                            obscureText: true,
+                            onSaved:
+                                widget.passwordNotifier.saveCurrentPassword,
+                            validator:
+                                widget.passwordNotifier.validateCurrentPassword,
+                          ),
+                          InputField(
+                            hintText: 'New password',
+                            obscureText: true,
+                            onSaved: widget.passwordNotifier.savenewPassword,
+                            validator:
+                                widget.passwordNotifier.validatenewPassword,
+                          ),
+                          InputField(
+                            hintText: 'Confirm New password',
+                            obscureText: true,
+                            onSaved:
+                                widget.passwordNotifier.saveconfirmNewPassword,
+                            validator:
+                                widget
+                                    .passwordNotifier
+                                    .validateconfirmNewPassword,
+                          ),
                           PrimaryButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              widget.passwordNotifier.changePassword(
+                                widget.onChange,
+                              );
+                            },
                             title: 'change password',
                           ),
                         ],

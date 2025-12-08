@@ -25,9 +25,11 @@ import 'package:mobile_version/factories/edit_article_page_factory.dart';
 import 'package:mobile_version/factories/home_page_factory.dart';
 import 'package:mobile_version/factories/login_page_factory.dart';
 import 'package:mobile_version/factories/register_page_factory.dart';
+import 'package:mobile_version/models/password_model.dart';
 import 'package:mobile_version/pages/article_page.dart';
 import 'package:mobile_version/pages/author_page.dart';
 import 'package:mobile_version/pages/create_article/create_article_page.dart';
+import 'package:mobile_version/pages/edit_profile/change_password_notifier.dart';
 import 'package:mobile_version/pages/edit_profile/edit_profile_notifier.dart';
 import 'package:mobile_version/pages/edit_profile/edit_profile_page.dart';
 import 'package:mobile_version/pages/edit_profile/update_profile_model.dart';
@@ -233,6 +235,11 @@ class MyApp extends StatelessWidget {
                         );
                         Navigator.of(context).pop();
                       },
+                      passwordNotifier: ChangePasswordNotifierImpl(
+                        globalKey: GlobalKey(),
+                        model: PasswordModel.initialize(),
+                      ),
+                      onChange: (passwordModel) {},
                     );
                   }
                   return SizedBox.shrink();

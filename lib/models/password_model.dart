@@ -8,4 +8,11 @@ final class PasswordModel {
     required this.newPassword,
     required this.confirmNewPassword,
   });
+  factory PasswordModel.initialize() {
+    return PasswordModel(
+      currentPassword: '',
+      newPassword: '',
+      confirmNewPassword: '',
+    );
+  }
 }
