@@ -73,6 +73,7 @@ class MyAccountPage extends StatelessWidget {
             onTapActionsButton: (article) {
               showActionsSheet(article);
             },
+            authorId: author.id,
           ),
         ],
       ),

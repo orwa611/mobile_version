@@ -128,6 +128,17 @@ final class HomePageFactory {
                     },
                   );
                 },
+                getAuthorId: () {
+                  if (context.read<MyAccountBloc>().state
+                      is MyAccountStateSuccess) {
+                    return (context.read<MyAccountBloc>().state
+                            as MyAccountStateSuccess)
+                        .author
+                        .id;
+                  } else {
+                    return '';
+                  }
+                },
               );
             }
             return SizedBox.shrink();

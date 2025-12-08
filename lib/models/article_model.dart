@@ -1,4 +1,5 @@
 import 'package:mobile_version/core/constants/network_constants.dart';
+import 'package:mobile_version/widgets/article_status_widget.dart';
 
 class Article {
   final String id;
@@ -11,6 +12,7 @@ class Article {
   final String createdAt;
   final String articleImage;
   final String authorImage;
+  final String status;
 
   Article({
     required this.id,
@@ -18,6 +20,7 @@ class Article {
     required this.title,
     required this.description,
     required this.tags,
+    required this.status,
     required this.firstName,
     required this.lastName,
     required this.createdAt,
@@ -38,5 +41,19 @@ class Article {
     final splited = createdAt.split('T');
     final min = splited[1].split(':');
     return '${splited[0]} ${min[0]}:${min[1]}';
+  }
+
+  StatusBar get statusBar {
+    switch (status) {
+      case 'APPROVED':
+        return StatusBar.approved;
+      case 'REJECTED':
+        return StatusBar.rejected;
+      case 'PENDING':
+        return StatusBar.pending;
+
+      default:
+        return StatusBar.unknown;
+    }
   }
 }

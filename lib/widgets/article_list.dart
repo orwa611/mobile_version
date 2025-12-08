@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_version/models/article_model.dart';
 import 'package:mobile_version/widgets/article_card_widget.dart';
+import 'package:mobile_version/widgets/article_status_widget.dart';
 
 class ArticleList extends StatelessWidget {
   final List<Article> articles;
@@ -8,6 +9,7 @@ class ArticleList extends StatelessWidget {
   final void Function(Article)? onTapActionsButton;
   final void Function(Article)? onTapAuthorButton;
   final bool shouldDisplayActions;
+  final String authorId;
 
   const ArticleList({
     super.key,
@@ -16,6 +18,7 @@ class ArticleList extends StatelessWidget {
     this.onTapActionsButton,
     this.onTapAuthorButton,
     required this.shouldDisplayActions,
+    required this.authorId,
   }) : assert(
          shouldDisplayActions
              ? onTapActionsButton != null
@@ -41,6 +44,13 @@ class ArticleList extends StatelessWidget {
           onTapAuthorButton: () {
             if (onTapAuthorButton != null) {
               onTapAuthorButton!(articles[index]);
+            }
+          },
+          buildBadge: () {
+            if (articles[index].authorId == authorId) {
+              return ArticleStatusWidget(status: articles[index].statusBar);
+            } else {
+              return SizedBox.shrink();
             }
           },
         );
