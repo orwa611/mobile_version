@@ -64,7 +64,7 @@ class AccountServiceImpl implements AccountService {
       );
       return AuthorResponse.fromJson(result);
     } on NetworkException catch (e) {
-      throw AppNetworkException.fromNetworkException(e);
+      throw e.toAppException();
     }
   }
 }
