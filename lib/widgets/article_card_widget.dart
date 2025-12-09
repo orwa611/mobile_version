@@ -6,6 +6,7 @@ class ArticleCardWidget extends StatelessWidget {
   final VoidCallback? onGoToArticle;
   final VoidCallback? onTapActionsButton;
   final VoidCallback? onTapAuthorButton;
+  final Widget Function()? buildBadge;
   final bool shouldDisplayActions;
 
   const ArticleCardWidget({
@@ -15,6 +16,7 @@ class ArticleCardWidget extends StatelessWidget {
     this.shouldDisplayActions = false,
     this.onTapActionsButton,
     this.onTapAuthorButton,
+    this.buildBadge,
   });
 
   @override
@@ -45,7 +47,14 @@ class ArticleCardWidget extends StatelessWidget {
                   );
                 },
               ),
-              Text(article.title),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(article.title),
+                  //,
+                  buildBadge != null ? buildBadge!() : SizedBox.shrink(),
+                ],
+              ),
               Text(article.shortDescription),
               Row(
                 children: [

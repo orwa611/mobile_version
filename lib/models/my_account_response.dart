@@ -27,8 +27,10 @@ class MyAccountResponse {
 
   Author toAuthor() {
     return Author(
+      id: author.id,
       firstName: author.firstName,
       lastName: author.lastName,
+      email: author.email ?? '',
       about: author.about ?? '',
       image: author.image,
       numberOfPosts: publishedPosts,

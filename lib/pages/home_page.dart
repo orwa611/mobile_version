@@ -12,6 +12,7 @@ class HomePage extends StatelessWidget {
   final void Function(Article) onGoToArticle;
   final void Function(String id) onGoToAuthor;
   final Widget Function() authorBuilder;
+  final String Function()? getAuthorId;
 
   const HomePage({
     super.key,
@@ -22,6 +23,7 @@ class HomePage extends StatelessWidget {
     required this.onGoToArticle,
     required this.onGoToAuthor,
     required this.authorBuilder,
+    this.getAuthorId,
   });
 
   @override
@@ -46,6 +48,7 @@ class HomePage extends StatelessWidget {
             onTapAuthorButton: (article) {
               onGoToAuthor(article.authorId);
             },
+            authorId: getAuthorId != null ? getAuthorId!() : '',
           ),
         ],
       ),

@@ -85,6 +85,7 @@ class ArticleResponse {
     final statusRes = json['status'] as String;
     final dateRes = json['date'] as String;
     final imageRes = json['image'] as String;
+    final authRes = json['author'] as String;
     return ArticleResponse(
       id: idRes,
       title: titleRes,
@@ -93,7 +94,12 @@ class ArticleResponse {
       status: statusRes,
       date: dateRes,
       image: imageRes,
-      author: null,
+      author: AuthorResponse(
+        id: authRes,
+        firstName: '',
+        lastName: '',
+        image: '',
+      ),
     );
   }
   // ?????
@@ -104,6 +110,7 @@ class ArticleResponse {
       title: title,
       description: content,
       tags: tags,
+      status: status,
       firstName: author?.firstName ?? "",
       lastName: author?.lastName ?? "",
       createdAt: date,
@@ -118,6 +125,7 @@ class AuthorResponse {
   final String firstName;
   final String lastName;
   final String image;
+  final String? email;
   final String? about;
 
   AuthorResponse({
@@ -125,6 +133,7 @@ class AuthorResponse {
     required this.firstName,
     required this.lastName,
     required this.image,
+    this.email,
     this.about,
   });
 
@@ -133,6 +142,7 @@ class AuthorResponse {
     final firstNameRes = json['name'] as String;
     final lastNameRes = json['lastname'] as String;
     final imageRes = json['image'] as String;
+    final emailRes = json['email'] as String?;
     final aboutRes = json['about'] as String?;
     return AuthorResponse(
       id: idRes,
@@ -140,6 +150,7 @@ class AuthorResponse {
       lastName: lastNameRes,
       image: imageRes,
       about: aboutRes,
+      email: emailRes,
     );
   }
 }

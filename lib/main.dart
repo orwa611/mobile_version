@@ -6,6 +6,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobile_version/blocs/article_bloc/article_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
 import 'package:mobile_version/blocs/auth_bloc/auth_bloc.dart';
+import 'package:mobile_version/blocs/change_password_bloc/change_password_bloc.dart';
+import 'package:mobile_version/blocs/change_password_bloc/change_password_event.dart';
+import 'package:mobile_version/blocs/change_password_bloc/change_password_state.dart';
 import 'package:mobile_version/blocs/comment_bloc.dart/comment_bloc.dart';
 import 'package:mobile_version/blocs/form_article_bloc/form_article_bloc.dart';
 import 'package:mobile_version/blocs/edit_article_bloc.dart/edit_article_bloc.dart';
@@ -13,6 +16,7 @@ import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
 import 'package:mobile_version/blocs/register_bloc/register_bloc.dart';
 import 'package:mobile_version/blocs/user_bloc/user_bloc.dart';
 import 'package:mobile_version/core/app_image_picker.dart';
+import 'package:mobile_version/core/extensions/context_extension.dart';
 import 'package:mobile_version/core/network/authenticated_dio_network_session.dart';
 import 'package:mobile_version/core/network/authenticated_http_network_session.dart';
 import 'package:mobile_version/core/network/http_network_session.dart';
@@ -25,9 +29,14 @@ import 'package:mobile_version/factories/edit_article_page_factory.dart';
 import 'package:mobile_version/factories/home_page_factory.dart';
 import 'package:mobile_version/factories/login_page_factory.dart';
 import 'package:mobile_version/factories/register_page_factory.dart';
+import 'package:mobile_version/models/password_model.dart';
 import 'package:mobile_version/pages/article_page.dart';
 import 'package:mobile_version/pages/author_page.dart';
 import 'package:mobile_version/pages/create_article/create_article_page.dart';
+import 'package:mobile_version/pages/edit_profile/change_password_notifier.dart';
+import 'package:mobile_version/pages/edit_profile/edit_profile_notifier.dart';
+import 'package:mobile_version/pages/edit_profile/edit_profile_page.dart';
+import 'package:mobile_version/pages/edit_profile/update_profile_model.dart';
 import 'package:mobile_version/pages/login/login_page.dart';
 import 'package:mobile_version/pages/register/register_page.dart';
 import 'package:mobile_version/services/account_service.dart';
@@ -126,7 +135,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<AccountService>(
           create:
               (context) => AccountServiceImpl(
-                session: context.read<AuthenticatedHttpNetworkSession>(),
+                session: context.read<AuthenticatedDioNetworkSession>(),
               ),
         ),
         RepositoryProvider<CommentService>(
@@ -196,6 +205,11 @@ class MyApp extends StatelessWidget {
                 ),
           ),
           BlocProvider(create: (context) => EditArticleBloc()),
+          BlocProvider(
+            create:
+                (context) =>
+                    ChangePasswordBloc(service: context.read<AccountService>()),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -209,6 +223,64 @@ class MyApp extends StatelessWidget {
                 CreateArticlePageFactory.buildCreateArticlePage,
             EditArticlePageFactory.route:
                 EditArticlePageFactory.buildEditArticlePage,
+            EditProfilePage.route: (context) {
+              return BlocListener<ChangePasswordBloc, ChangePasswordState>(
+                listener: (context, passwordState) {
+                  if (passwordState is ChangePasswordSuccessState) {
+                    context.read<UserBloc>().add(UserLoggedOutEvent());
+                    context.read<MyAccountBloc>().add(
+                      UnauthenticatedMyAccountEvent(),
+                    );
+                    Navigator.of(context).pop();
+                    context.snackBar(
+                      'Your password has bees changed successfully ! please login again',
+                    );
+                  }
+                  if (passwordState is ChangePasswordErrorState) {
+                    context.snackBar(
+                      passwordState.errorMessage,
+                      status: SnackBarStatus.error,
+                    );
+                  }
+                },
+                child: BlocBuilder<MyAccountBloc, MyAccountState>(
+                  builder: (context, state) {
+                    if (state is MyAccountStateSuccess) {
+                      return EditProfilePage(
+                        notifier: EditProfileNotifierImpl(
+                          globalKey: GlobalKey(),
+                          model: UpdateProfileModel(
+                            firstName: state.author.firstName,
+                            lastName: state.author.lastName,
+                            email: state.author.email,
+                            bio: state.author.about,
+                          ),
+                        ),
+                        isLoading: false,
+                        onUpdate: (model) {
+                          context.read<MyAccountBloc>().add(
+                            UpdateMyAccountEvent(author: model),
+                          );
+                          Navigator.of(context).pop();
+                        },
+                        passwordNotifier: ChangePasswordNotifierImpl(
+                          globalKey: GlobalKey(),
+                          model: PasswordModel.initialize(),
+                        ),
+                        onChange: (passwordModel) {
+                          context.read<ChangePasswordBloc>().add(
+                            UpdatePasswordEvent(
+                              request: passwordModel.toRequest(),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                    return SizedBox.shrink();
+                  },
+                ),
+              );
+            },
           },
         ),
       ),
