@@ -1,3 +1,5 @@
+import 'package:mobile_version/models/password_request.dart';
+
 final class PasswordModel {
   String currentPassword;
   String newPassword;
@@ -13,6 +15,12 @@ final class PasswordModel {
       currentPassword: '',
       newPassword: '',
       confirmNewPassword: '',
+    );
+  }
+  PasswordRequest toRequest() {
+    return PasswordRequest(
+      currentPassword: currentPassword,
+      newPassword: newPassword,
     );
   }
 }

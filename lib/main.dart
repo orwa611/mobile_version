@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobile_version/blocs/article_bloc/article_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
 import 'package:mobile_version/blocs/auth_bloc/auth_bloc.dart';
+import 'package:mobile_version/blocs/change_password_bloc/change_password_bloc.dart';
+import 'package:mobile_version/blocs/change_password_bloc/change_password_event.dart';
 import 'package:mobile_version/blocs/comment_bloc.dart/comment_bloc.dart';
 import 'package:mobile_version/blocs/form_article_bloc/form_article_bloc.dart';
 import 'package:mobile_version/blocs/edit_article_bloc.dart/edit_article_bloc.dart';
@@ -201,6 +203,11 @@ class MyApp extends StatelessWidget {
                 ),
           ),
           BlocProvider(create: (context) => EditArticleBloc()),
+          BlocProvider(
+            create:
+                (context) =>
+                    ChangePasswordBloc(service: context.read<AccountService>()),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -239,7 +246,13 @@ class MyApp extends StatelessWidget {
                         globalKey: GlobalKey(),
                         model: PasswordModel.initialize(),
                       ),
-                      onChange: (passwordModel) {},
+                      onChange: (passwordModel) {
+                        context.read<ChangePasswordBloc>().add(
+                          UpdatePasswordEvent(
+                            request: passwordModel.toRequest(),
+                          ),
+                        );
+                      },
                     );
                   }
                   return SizedBox.shrink();

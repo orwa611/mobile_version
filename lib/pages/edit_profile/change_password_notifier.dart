@@ -19,6 +19,7 @@ abstract class ChangePasswordNotifier extends ChangeNotifier {
 }
 
 class ChangePasswordNotifierImpl extends ChangePasswordNotifier {
+  String? newPassword;
   ChangePasswordNotifierImpl({required super.globalKey, required super.model});
 
   @override
@@ -36,7 +37,7 @@ class ChangePasswordNotifierImpl extends ChangePasswordNotifier {
 
   @override
   void saveconfirmNewPassword(String? value) {
-    model.currentPassword = value ?? '';
+    model.confirmNewPassword = value ?? '';
   }
 
   @override
@@ -55,7 +56,7 @@ class ChangePasswordNotifierImpl extends ChangePasswordNotifier {
   @override
   String? validateconfirmNewPassword(String? value) {
     if (value != null && value.isNotEmpty) {
-      if (value == model.newPassword) {
+      if (value == newPassword) {
         return null;
       }
       return 'your new password doesnt match !';
@@ -66,10 +67,11 @@ class ChangePasswordNotifierImpl extends ChangePasswordNotifier {
   @override
   String? validatenewPassword(String? value) {
     if (value != null && value.isNotEmpty) {
-      if (value.length > 6) {
+      if (value.length >= 6) {
+        newPassword = value;
         return null;
       }
-      return 'your new password must contain more than 6 characters';
+      return 'your new password must contain more than or equal to 6 characters';
     }
     return 'your new password is required';
   }

@@ -131,11 +131,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     .validateconfirmNewPassword,
                           ),
                           PrimaryButton(
-                            onPressed: () {
-                              widget.passwordNotifier.changePassword(
-                                widget.onChange,
-                              );
-                            },
+                            onPressed:
+                                widget.isLoading
+                                    ? null
+                                    : () {
+                                      widget.passwordNotifier.changePassword(
+                                        widget.onChange,
+                                      );
+                                    },
                             title: 'change password',
                           ),
                         ],

@@ -11,7 +11,7 @@ abstract class AccountService {
   Future<MyAccountResponse> getMyAccount();
   Future<ArticleResponse> deleteArticle(String id);
   Future<AuthorResponse> updateMyAccount(UpdateProfileModel author);
-  Future<AuthorResponse> updatePassword(PasswordRequest password);
+  Future<AuthorResponse> updatePassword(PasswordRequest request);
 }
 
 class AccountServiceImpl implements AccountService {
@@ -61,7 +61,6 @@ class AccountServiceImpl implements AccountService {
       final result = await _session.post(
         '/author/reset-password',
         body: request.toJson(),
-        headers: {"Content-Type": "application/json"},
       );
       return AuthorResponse.fromJson(result);
     } on NetworkException catch (e) {
