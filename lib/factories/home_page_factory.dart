@@ -9,11 +9,11 @@ import 'package:mobile_version/factories/edit_article_page_factory.dart';
 import 'package:mobile_version/models/article_model.dart';
 import 'package:mobile_version/pages/article_page.dart';
 import 'package:mobile_version/pages/author_page.dart';
-import 'package:mobile_version/pages/create_article/create_article_page.dart';
 import 'package:mobile_version/pages/edit_profile/edit_profile_page.dart';
 import 'package:mobile_version/pages/home_page.dart';
 import 'package:mobile_version/pages/login/login_page.dart';
 import 'package:mobile_version/pages/my_account_page.dart';
+import 'package:mobile_version/widgets/create_article_widget.dart';
 import 'package:mobile_version/widgets/primary_button.dart';
 import 'package:mobile_version/widgets/tab_bar_widget.dart';
 
@@ -82,43 +82,7 @@ final class HomePageFactory {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(120),
-                                    child: Image.network(
-                                      state.author.authorImageUrl,
-                                      height: 40,
-                                      width: 40,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (
-                                        context,
-                                        error,
-                                        stackTrace,
-                                      ) {
-                                        return SizedBox(
-                                          height: 40,
-                                          width: 40,
-                                          child: Icon(Icons.person),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(
-                                          context,
-                                        ).pushNamed(CreateArticlePage.route);
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(8),
-                                        child: Text("What's on your mind?"),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              child: CreateArticleWidget(author: state.author),
                             ),
                             Divider(),
                           ],

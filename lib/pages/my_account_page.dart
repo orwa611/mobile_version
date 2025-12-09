@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_version/models/article_model.dart';
 import 'package:mobile_version/models/author_model.dart';
 import 'package:mobile_version/widgets/article_list.dart';
+import 'package:mobile_version/widgets/create_article_widget.dart';
 
 class MyAccountPage extends StatelessWidget {
   final List<Article> articles;
@@ -64,6 +65,11 @@ class MyAccountPage extends StatelessWidget {
                 ),
                 Text(author.about),
                 Text('Published post: ${author.numberOfPosts}'),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: CreateArticleWidget(author: author),
+                ),
+                Divider(),
               ],
             ),
           ),
