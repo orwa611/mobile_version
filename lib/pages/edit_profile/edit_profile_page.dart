@@ -103,45 +103,53 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   builder: (context, _) {
                     return Form(
                       key: widget.passwordNotifier.globalKey,
-                      child: Column(
-                        children: [
-                          InputField(
-                            hintText: 'Current password',
-                            obscureText: true,
-                            onSaved:
-                                widget.passwordNotifier.saveCurrentPassword,
-                            validator:
-                                widget.passwordNotifier.validateCurrentPassword,
-                          ),
-                          InputField(
-                            hintText: 'New password',
-                            obscureText: true,
-                            onSaved: widget.passwordNotifier.savenewPassword,
-                            validator:
-                                widget.passwordNotifier.validatenewPassword,
-                          ),
-                          InputField(
-                            hintText: 'Confirm New password',
-                            obscureText: true,
-                            onSaved:
-                                widget.passwordNotifier.saveconfirmNewPassword,
-                            validator:
-                                widget
-                                    .passwordNotifier
-                                    .validateconfirmNewPassword,
-                          ),
-                          PrimaryButton(
-                            onPressed:
-                                widget.isLoading
-                                    ? null
-                                    : () {
-                                      widget.passwordNotifier.changePassword(
-                                        widget.onChange,
-                                      );
-                                    },
-                            title: 'change password',
-                          ),
-                        ],
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 28.0, right: 28.0),
+                        child: Column(
+                          spacing: 12,
+                          children: [
+                            InputField(
+                              hintText: 'Current password',
+                              obscureText: true,
+                              onSaved:
+                                  widget.passwordNotifier.saveCurrentPassword,
+                              validator:
+                                  widget
+                                      .passwordNotifier
+                                      .validateCurrentPassword,
+                            ),
+                            InputField(
+                              hintText: 'New password',
+                              obscureText: true,
+                              onSaved: widget.passwordNotifier.savenewPassword,
+                              validator:
+                                  widget.passwordNotifier.validatenewPassword,
+                            ),
+                            InputField(
+                              hintText: 'Confirm New password',
+                              obscureText: true,
+                              onSaved:
+                                  widget
+                                      .passwordNotifier
+                                      .saveconfirmNewPassword,
+                              validator:
+                                  widget
+                                      .passwordNotifier
+                                      .validateconfirmNewPassword,
+                            ),
+                            PrimaryButton(
+                              onPressed:
+                                  widget.isLoading
+                                      ? null
+                                      : () {
+                                        widget.passwordNotifier.changePassword(
+                                          widget.onChange,
+                                        );
+                                      },
+                              title: 'change password',
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
