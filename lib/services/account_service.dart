@@ -4,12 +4,14 @@ import 'package:mobile_version/core/exceptions/network_exception.dart';
 import 'package:mobile_version/core/network/network_session.dart';
 import 'package:mobile_version/models/article_response.dart';
 import 'package:mobile_version/models/my_account_response.dart';
+import 'package:mobile_version/models/password_request.dart';
 import 'package:mobile_version/pages/edit_profile/update_profile_model.dart';
 
 abstract class AccountService {
   Future<MyAccountResponse> getMyAccount();
   Future<ArticleResponse> deleteArticle(String id);
   Future<AuthorResponse> updateMyAccount(UpdateProfileModel author);
+  Future<AuthorResponse> updatePassword(PasswordRequest password);
 }
 
 class AccountServiceImpl implements AccountService {
@@ -47,6 +49,20 @@ class AccountServiceImpl implements AccountService {
         'email': author.email,
       });
       final result = await _session.put('/author/update', body: data);
+      return AuthorResponse.fromJson(result);
+    } on NetworkException catch (e) {
+      throw AppNetworkException.fromNetworkException(e);
+    }
+  }
+
+  @override
+  Future<AuthorResponse> updatePassword(PasswordRequest request) async {
+    try {
+      final result = await _session.post(
+        '/author/reset-password',
+        body: request.toJson(),
+        headers: {"Content-Type": "application/json"},
+      );
       return AuthorResponse.fromJson(result);
     } on NetworkException catch (e) {
       throw AppNetworkException.fromNetworkException(e);
