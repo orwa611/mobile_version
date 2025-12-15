@@ -103,6 +103,7 @@ final class HomePageFactory {
                     return '';
                   }
                 },
+                onTapFavButton: (bool) {},
               );
             }
             return SizedBox.shrink();
@@ -189,6 +190,7 @@ final class HomePageFactory {
               onGoToEditProfile: (author) {
                 Navigator.of(context).pushNamed(EditProfilePage.route);
               },
+              onTapFavButton: (bool) {},
             );
           }
           if (state is MyAccountStateLoading) {

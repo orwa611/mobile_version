@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_version/core/constants/logo_constants.dart';
 import 'package:mobile_version/models/article_model.dart';
 import 'package:mobile_version/widgets/app_text_button.dart';
 import 'package:mobile_version/widgets/article_list.dart';
@@ -13,6 +14,7 @@ class HomePage extends StatelessWidget {
   final void Function(String id) onGoToAuthor;
   final Widget Function() authorBuilder;
   final String Function()? getAuthorId;
+  final void Function(bool) onTapFavButton;
 
   const HomePage({
     super.key,
@@ -24,6 +26,7 @@ class HomePage extends StatelessWidget {
     required this.onGoToAuthor,
     required this.authorBuilder,
     this.getAuthorId,
+    required this.onTapFavButton,
   });
 
   @override
@@ -36,7 +39,7 @@ class HomePage extends StatelessWidget {
             scrolledUnderElevation: 0,
             expandedHeight: 20.0,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset('logo.png'),
+              background: Image.asset(LogoConstants.logo),
             ),
             actions: [_buildActionButtons()],
           ),
@@ -49,6 +52,7 @@ class HomePage extends StatelessWidget {
               onGoToAuthor(article.authorId);
             },
             authorId: getAuthorId != null ? getAuthorId!() : '',
+            onTapFavButton: onTapFavButton,
           ),
         ],
       ),

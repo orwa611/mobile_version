@@ -5,11 +5,13 @@ import 'package:mobile_version/widgets/article_status_widget.dart';
 
 class ArticleList extends StatelessWidget {
   final List<Article> articles;
+  final List<Article>? articlesFav;
   final void Function(Article) onGoToArticle;
   final void Function(Article)? onTapActionsButton;
   final void Function(Article)? onTapAuthorButton;
   final bool shouldDisplayActions;
   final String authorId;
+  final void Function(bool) onTapFavButton;
 
   const ArticleList({
     super.key,
@@ -19,6 +21,8 @@ class ArticleList extends StatelessWidget {
     this.onTapAuthorButton,
     required this.shouldDisplayActions,
     required this.authorId,
+    this.articlesFav,
+    required this.onTapFavButton,
   }) : assert(
          shouldDisplayActions
              ? onTapActionsButton != null
@@ -51,6 +55,23 @@ class ArticleList extends StatelessWidget {
               return ArticleStatusWidget(status: articles[index].statusBar);
             } else {
               return SizedBox.shrink();
+            }
+          },
+          buildFavButton: (article) {
+            if (articlesFav?.where((e) => e.id == article.id).first != null) {
+              return IconButton(
+                onPressed: () {
+                  onTapFavButton(true);
+                },
+                icon: Icon(Icons.favorite),
+              );
+            } else {
+              return IconButton(
+                onPressed: () {
+                  onTapFavButton(false);
+                },
+                icon: Icon(Icons.favorite_border_outlined),
+              );
             }
           },
         );

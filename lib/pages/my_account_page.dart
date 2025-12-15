@@ -10,6 +10,7 @@ class MyAccountPage extends StatelessWidget {
   final void Function(Article) onGoToArticle;
   final void Function(Author) onGoToEditProfile;
   final void Function(Article article) showActionsSheet;
+  final void Function(bool) onTapFavButton;
   static const String route = '/myAccount';
 
   const MyAccountPage({
@@ -19,6 +20,7 @@ class MyAccountPage extends StatelessWidget {
     required this.author,
     required this.showActionsSheet,
     required this.onGoToEditProfile,
+    required this.onTapFavButton,
   });
 
   @override
@@ -81,6 +83,7 @@ class MyAccountPage extends StatelessWidget {
               showActionsSheet(article);
             },
             authorId: author.id,
+            onTapFavButton: onTapFavButton,
           ),
         ],
       ),

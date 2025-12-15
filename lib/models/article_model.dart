@@ -39,8 +39,7 @@ class Article {
 
   String get formatedCreatedAt {
     final splited = createdAt.split('T');
-    final min = splited[1].split(':');
-    return '${splited[0]} ${min[0]}:${min[1]}';
+    return '${splited[0]} ';
   }
 
   StatusBar get statusBar {

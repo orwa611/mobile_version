@@ -47,9 +47,21 @@ import 'package:mobile_version/services/auth_storage_service.dart';
 import 'package:mobile_version/services/comment_service.dart';
 import 'package:mobile_version/services/pick_image_service.dart';
 import 'package:mobile_version/services/register_service.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final database = await openDatabase(
+    join(await getDatabasesPath(), 'doggie_database.db'),
+    onCreate: (db, version) {
+      print("database created");
+      return db.execute(
+        'CREATE TABLE dogs(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)',
+      );
+    },
+    version: 1,
+  );
   Bloc.observer = const AppBlocObserver();
   runApp(const MyApp());
 }
