@@ -5,13 +5,14 @@ import 'package:mobile_version/widgets/article_list.dart';
 import 'package:mobile_version/widgets/create_article_widget.dart';
 
 class MyAccountPage extends StatelessWidget {
+  static const String route = '/myAccount';
   final List<Article> articles;
   final Author author;
   final void Function(Article) onGoToArticle;
   final void Function(Author) onGoToEditProfile;
   final void Function(Article article) showActionsSheet;
-  final void Function(bool) onTapFavButton;
-  static const String route = '/myAccount';
+  final void Function(bool, Article) onTapFavButton;
+  final List<Article> Function() getArticlesFav;
 
   const MyAccountPage({
     super.key,
@@ -21,6 +22,7 @@ class MyAccountPage extends StatelessWidget {
     required this.showActionsSheet,
     required this.onGoToEditProfile,
     required this.onTapFavButton,
+    required this.getArticlesFav,
   });
 
   @override
@@ -84,6 +86,9 @@ class MyAccountPage extends StatelessWidget {
             },
             authorId: author.id,
             onTapFavButton: onTapFavButton,
+            getArticlesFav: () {
+              return getArticlesFav();
+            },
           ),
         ],
       ),

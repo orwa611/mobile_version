@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import '../exceptions/app_data_base_exception.dart';
 
 abstract class AppDataBase {
+  Future<void> initialDb();
   Future<int> insert(String table, Map<String, Object?> values);
   Future<List<Map<String, Object?>>> query(String table);
   Future<int> delete(String table, {required Map<String, dynamic> where});
@@ -12,15 +13,13 @@ abstract class AppDataBase {
 final class AppDataBaseImpl implements AppDataBase {
   late Database? database;
 
-  AppDataBaseImpl() {
-    initialDb();
-  }
-
-  initialDb() async {
+  @override
+  Future<void> initialDb() async {
     try {
       String databasePath = await getDatabasesPath();
       String path = join(databasePath, 'fav.db');
-      database = await openDatabase(path, onCreate: _onCreate);
+      database = await openDatabase(path, onCreate: _onCreate, version: 2);
+      print(" database Opened Success");
     } catch (e) {
       print("Can't open database ${e.toString()}");
       throw DataBaseNotFoundException();
@@ -30,7 +29,7 @@ final class AppDataBaseImpl implements AppDataBase {
   _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE "article" (
-        "id" TEXT PRIMARY KEY,
+        "id" TEXT NOT NULL,
         "title" TEXT,
         "content" TEXT,
         "article_image" TEXT,
@@ -39,6 +38,7 @@ final class AppDataBaseImpl implements AppDataBase {
         "author_first_name" TEXT,
         "author_last_name" TEXT,
         "author_image" TEXT,
+        PRIMARY KEY (id)
       )
   ''');
   }
@@ -78,7 +78,7 @@ final class AppDataBaseImpl implements AppDataBase {
     String table, {
     required Map<String, dynamic> where,
   }) async {
-    final String keyString = where.keys.join(' = ?,').substring(0, 1);
+    final String keyString = where.keys.map((key) => '$key = ?').join(' AND ');
     final List<dynamic> values = where.values.toList();
     try {
       if (database != null) {

@@ -29,7 +29,8 @@ final class FavoriteArticleServiceImpl implements FavoriteArticleService {
         "author_image": article.authorImage,
       });
       return true;
-    } on AppDataBaseException catch (_) {
+    } on AppDataBaseException catch (e) {
+      print(e.message);
       return false;
     }
   }
@@ -62,7 +63,8 @@ final class FavoriteArticleServiceImpl implements FavoriteArticleService {
           authorImage: authorImage,
         );
       }).toList();
-    } catch (e) {
+    } on AppDataBaseException catch (e) {
+      print(e.message);
       return [];
     }
   }
@@ -72,7 +74,8 @@ final class FavoriteArticleServiceImpl implements FavoriteArticleService {
     try {
       await appDataBase.delete('article', where: {'id': article.id});
       return true;
-    } catch (e) {
+    } on AppDataBaseException catch (e) {
+      print(e.message);
       return false;
     }
   }

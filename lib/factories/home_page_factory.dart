@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_version/blocs/article_bloc/article_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
 import 'package:mobile_version/blocs/edit_article_bloc.dart/edit_article_bloc.dart';
+import 'package:mobile_version/blocs/favorites_bloc/favorites_bloc.dart';
 import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
 import 'package:mobile_version/blocs/user_bloc/user_bloc.dart';
 import 'package:mobile_version/factories/edit_article_page_factory.dart';
@@ -103,7 +104,27 @@ final class HomePageFactory {
                     return '';
                   }
                 },
-                onTapFavButton: (bool) {},
+                getArticlesFav: () {
+                  if (context.read<FavoritesBloc>().state
+                      is ListFavoritesStateSuccess) {
+                    return (context.read<FavoritesBloc>().state
+                            as ListFavoritesStateSuccess)
+                        .favArticles;
+                  } else {
+                    return [];
+                  }
+                },
+                onTapFavButton: (value, article) {
+                  if (value) {
+                    context.read<FavoritesBloc>().add(
+                      UnFavoriteArticleEvent(article: article),
+                    );
+                  } else {
+                    context.read<FavoritesBloc>().add(
+                      FavoriteArticleEvent(article: article),
+                    );
+                  }
+                },
               );
             }
             return SizedBox.shrink();
@@ -190,7 +211,20 @@ final class HomePageFactory {
               onGoToEditProfile: (author) {
                 Navigator.of(context).pushNamed(EditProfilePage.route);
               },
-              onTapFavButton: (bool) {},
+              onTapFavButton: (value, article) {
+                if (value) {
+                  context.read<FavoritesBloc>().add(
+                    UnFavoriteArticleEvent(article: article),
+                  );
+                } else {
+                  context.read<FavoritesBloc>().add(
+                    FavoriteArticleEvent(article: article),
+                  );
+                }
+              },
+              getArticlesFav: () {
+                return [];
+              },
             );
           }
           if (state is MyAccountStateLoading) {
