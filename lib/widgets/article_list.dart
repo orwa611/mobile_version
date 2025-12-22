@@ -62,14 +62,17 @@ class ArticleList extends StatelessWidget {
                 onPressed: () {
                   onTapFavButton(true, article);
                 },
-                icon: Icon(Icons.favorite),
+                icon: Icon(Icons.favorite, color: Colors.redAccent),
               );
             } else {
               return IconButton(
                 onPressed: () {
                   onTapFavButton(false, article);
                 },
-                icon: Icon(Icons.favorite_border_outlined),
+                icon: Icon(
+                  Icons.favorite_border_outlined,
+                  color: Colors.redAccent,
+                ),
               );
             }
           },
