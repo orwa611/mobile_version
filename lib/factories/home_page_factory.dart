@@ -131,6 +131,9 @@ final class HomePageFactory {
                         );
                       }
                     },
+                    onRefresh: () async {
+                      context.read<ArticleBloc>().add(GetArticlesEvent());
+                    },
                   );
                 },
               );

@@ -15,6 +15,8 @@ class HomePage extends StatelessWidget {
   final Widget Function() authorBuilder;
   final String Function()? getAuthorId;
   final List<Article> Function() getArticlesFav;
+  final ScrollController? controller;
+  final Future<void> Function() onRefresh;
 
   final void Function(bool, Article) onTapFavButton;
 
@@ -30,35 +32,41 @@ class HomePage extends StatelessWidget {
     this.getAuthorId,
     required this.onTapFavButton,
     required this.getArticlesFav,
+    this.controller,
+    required this.onRefresh,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            scrolledUnderElevation: 0,
-            expandedHeight: 20.0,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(LogoConstants.logo),
+      body: RefreshIndicator.adaptive(
+        onRefresh: onRefresh,
+        child: CustomScrollView(
+          controller: controller,
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              scrolledUnderElevation: 0,
+              expandedHeight: 20.0,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Image.asset(LogoConstants.logo),
+              ),
+              actions: [_buildActionButtons()],
             ),
-            actions: [_buildActionButtons()],
-          ),
-          SliverToBoxAdapter(child: authorBuilder()),
-          ArticleList(
-            articles: articles,
-            onGoToArticle: onGoToArticle,
-            shouldDisplayActions: false,
-            onTapAuthorButton: (article) {
-              onGoToAuthor(article.authorId);
-            },
-            authorId: getAuthorId != null ? getAuthorId!() : '',
-            onTapFavButton: onTapFavButton,
-            getArticlesFav: getArticlesFav,
-          ),
-        ],
+            SliverToBoxAdapter(child: authorBuilder()),
+            ArticleList(
+              articles: articles,
+              onGoToArticle: onGoToArticle,
+              shouldDisplayActions: false,
+              onTapAuthorButton: (article) {
+                onGoToAuthor(article.authorId);
+              },
+              authorId: getAuthorId != null ? getAuthorId!() : '',
+              onTapFavButton: onTapFavButton,
+              getArticlesFav: getArticlesFav,
+            ),
+          ],
+        ),
       ),
     );
   }

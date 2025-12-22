@@ -15,7 +15,7 @@ class ArticleBloc extends Bloc<ArticleEvent, ArticleState> {
     on<GetArticlesEvent>((event, emit) async {
       emit(ArticleStateLoading());
       try {
-        final result = await _service.getArticles();
+        final result = await _service.getArticles(page: event.page);
         emit(
           ArticleStateSuccess(
             articles: result.articles.map((e) => e.toArticle()).toList(),
