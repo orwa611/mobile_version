@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_version/core/constants/logo_constants.dart';
 import 'package:mobile_version/models/password_model.dart';
 import 'package:mobile_version/pages/edit_profile/change_password_notifier.dart';
 import 'package:mobile_version/pages/edit_profile/edit_profile_notifier.dart';
@@ -35,7 +36,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset('logo.png', height: 40),
+            Image.asset(LogoConstants.logo, height: 40),
             ExpansionTile(
               title: Text('Edit your Profile', style: TextStyle(fontSize: 26)),
               children: [

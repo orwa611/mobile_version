@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_version/core/constants/logo_constants.dart';
 import 'package:mobile_version/pages/register/register_form_model.dart';
 import 'package:mobile_version/pages/register/register_notifier.dart';
 import 'package:mobile_version/widgets/input_field.dart';
@@ -35,7 +36,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.asset('logo.png', height: 40),
+            Image.asset(LogoConstants.logo, height: 40),
             SizedBox(height: 48.0),
             ListenableBuilder(
               listenable: widget.registerNotifier,

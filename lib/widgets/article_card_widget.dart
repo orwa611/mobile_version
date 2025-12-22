@@ -8,7 +8,7 @@ class ArticleCardWidget extends StatelessWidget {
   final VoidCallback? onTapAuthorButton;
   final Widget Function()? buildBadge;
   final bool shouldDisplayActions;
-
+  final Widget Function(Article) buildFavButton;
   const ArticleCardWidget({
     super.key,
     required this.article,
@@ -17,6 +17,7 @@ class ArticleCardWidget extends StatelessWidget {
     this.onTapActionsButton,
     this.onTapAuthorButton,
     this.buildBadge,
+    required this.buildFavButton,
   });
 
   @override
@@ -35,17 +36,22 @@ class ArticleCardWidget extends StatelessWidget {
             spacing: 10,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(
-                article.articleImageUrl,
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return SizedBox(
+              Stack(
+                children: [
+                  Image.network(
+                    article.articleImageUrl,
                     height: 200,
-                    child: Center(child: Icon(Icons.warning_amber)),
-                  );
-                },
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return SizedBox(
+                        height: 200,
+                        child: Center(child: Icon(Icons.warning_amber)),
+                      );
+                    },
+                  ),
+                  buildFavButton(article),
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,11 +63,11 @@ class ArticleCardWidget extends StatelessWidget {
               ),
               Text(article.shortDescription),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   shouldDisplayActions
                       ? _buildActionsIconButton()
                       : _buildAuthorIconButton(),
-                  Spacer(),
                   Text('created at ${article.formatedCreatedAt}'),
                 ],
               ),

@@ -10,6 +10,7 @@ import 'package:mobile_version/blocs/change_password_bloc/change_password_bloc.d
 import 'package:mobile_version/blocs/change_password_bloc/change_password_event.dart';
 import 'package:mobile_version/blocs/change_password_bloc/change_password_state.dart';
 import 'package:mobile_version/blocs/comment_bloc.dart/comment_bloc.dart';
+import 'package:mobile_version/blocs/favorites_bloc/favorites_bloc.dart';
 import 'package:mobile_version/blocs/form_article_bloc/form_article_bloc.dart';
 import 'package:mobile_version/blocs/edit_article_bloc.dart/edit_article_bloc.dart';
 import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
@@ -20,6 +21,7 @@ import 'package:mobile_version/core/extensions/context_extension.dart';
 import 'package:mobile_version/core/network/authenticated_dio_network_session.dart';
 import 'package:mobile_version/core/network/authenticated_http_network_session.dart';
 import 'package:mobile_version/core/network/http_network_session.dart';
+import 'package:mobile_version/core/storage/fav_db.dart';
 import 'package:mobile_version/core/storage/storage_adapter.dart';
 import 'package:mobile_version/core/storage/storage_session.dart';
 import 'package:mobile_version/factories/article_page_factory.dart';
@@ -45,13 +47,17 @@ import 'package:mobile_version/services/article_service_manager.dart';
 import 'package:mobile_version/services/auth_service.dart';
 import 'package:mobile_version/services/auth_storage_service.dart';
 import 'package:mobile_version/services/comment_service.dart';
+import 'package:mobile_version/services/favorite_article_service.dart';
 import 'package:mobile_version/services/pick_image_service.dart';
 import 'package:mobile_version/services/register_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final AppDataBase database = AppDataBaseImpl();
+  await database.initialDb();
+
   Bloc.observer = const AppBlocObserver();
-  runApp(const MyApp());
+  runApp(MyApp(database: database));
 }
 
 class AppBlocObserver extends BlocObserver {
@@ -75,7 +81,8 @@ class AppBlocObserver extends BlocObserver {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final AppDataBase database;
+  const MyApp({super.key, required this.database});
 
   // This widget is the root of your application.
   @override
@@ -158,6 +165,9 @@ class MyApp extends StatelessWidget {
                 session: context.read<AuthenticatedDioNetworkSession>(),
               ),
         ),
+        RepositoryProvider<FavoriteArticleService>(
+          create: (context) => FavoriteArticleServiceImpl(database),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -209,6 +219,12 @@ class MyApp extends StatelessWidget {
             create:
                 (context) =>
                     ChangePasswordBloc(service: context.read<AccountService>()),
+          ),
+          BlocProvider(
+            create:
+                (context) => FavoritesBloc(
+                  service: context.read<FavoriteArticleService>(),
+                )..add(GetFavoriteArticleEvent()),
           ),
         ],
         child: MaterialApp(

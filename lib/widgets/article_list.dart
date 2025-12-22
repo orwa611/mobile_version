@@ -10,7 +10,8 @@ class ArticleList extends StatelessWidget {
   final void Function(Article)? onTapAuthorButton;
   final bool shouldDisplayActions;
   final String authorId;
-
+  final void Function(bool, Article) onTapFavButton;
+  final List<Article> Function() getArticlesFav;
   const ArticleList({
     super.key,
     required this.articles,
@@ -19,6 +20,8 @@ class ArticleList extends StatelessWidget {
     this.onTapAuthorButton,
     required this.shouldDisplayActions,
     required this.authorId,
+    required this.onTapFavButton,
+    required this.getArticlesFav,
   }) : assert(
          shouldDisplayActions
              ? onTapActionsButton != null
@@ -51,6 +54,26 @@ class ArticleList extends StatelessWidget {
               return ArticleStatusWidget(status: articles[index].statusBar);
             } else {
               return SizedBox.shrink();
+            }
+          },
+          buildFavButton: (article) {
+            if (getArticlesFav().map((e) => e.id).contains(article.id)) {
+              return IconButton(
+                onPressed: () {
+                  onTapFavButton(true, article);
+                },
+                icon: Icon(Icons.favorite, color: Colors.redAccent),
+              );
+            } else {
+              return IconButton(
+                onPressed: () {
+                  onTapFavButton(false, article);
+                },
+                icon: Icon(
+                  Icons.favorite_border_outlined,
+                  color: Colors.redAccent,
+                ),
+              );
             }
           },
         );
