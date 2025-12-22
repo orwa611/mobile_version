@@ -23,18 +23,23 @@ class FavoritesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          ArticleList(
-            articles: articles,
-            onGoToArticle: onGoToArticle,
-            shouldDisplayActions: false,
-            onTapAuthorButton: (p0) {},
-            authorId: getAuthorId != null ? getAuthorId!() : '',
-            onTapFavButton: onTapFavButton,
-            getArticlesFav: getArticlesFav,
-          ),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: CustomScrollView(
+          slivers: [
+            ArticleList(
+              articles: articles,
+              onGoToArticle: onGoToArticle,
+              shouldDisplayActions: false,
+              onTapAuthorButton: (article) {
+                onGoToAuthor(article.authorId);
+              },
+              authorId: getAuthorId != null ? getAuthorId!() : '',
+              onTapFavButton: onTapFavButton,
+              getArticlesFav: getArticlesFav,
+            ),
+          ],
+        ),
       ),
     );
   }

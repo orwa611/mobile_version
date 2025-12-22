@@ -15,4 +15,8 @@ final class ListFavoritesStateSuccess extends FavoritesBlocState {
   ListFavoritesStateSuccess({required this.favArticles});
 }
 
-final class FavoritesStateError extends FavoritesBlocState {}
+final class FavoritesStateError extends FavoritesBlocState {
+  final String error;
+
+  FavoritesStateError({required this.error});
+}

@@ -143,13 +143,43 @@ final class HomePageFactory {
   }
 
   static Widget _buildFavoritedArticles(BuildContext context) {
-    return FavoritesPage(
-      articles: [],
-      onGoToArticle: (article) {},
-      onGoToAuthor: (String id) {},
-      onTapFavButton: (value, article) {},
-      getArticlesFav: () {
-        return [];
+    return BlocBuilder<FavoritesBloc, FavoritesBlocState>(
+      builder: (context, favState) {
+        if (favState is ListFavoritesStateSuccess) {
+          return FavoritesPage(
+            articles: favState.favArticles,
+            onGoToArticle: (article) {
+              context.read<ArticleDetailBloc>().add(
+                GetArticleDetailEvent(id: article.id),
+              );
+              Navigator.of(context).pushNamed(ArticlePage.route);
+            },
+            onGoToAuthor: (String id) {
+              Navigator.of(context).pushNamed(AuthorPage.route);
+            },
+            onTapFavButton: (value, article) {
+              if (value) {
+                context.read<FavoritesBloc>().add(
+                  UnFavoriteArticleEvent(article: article),
+                );
+              } else {
+                context.read<FavoritesBloc>().add(
+                  FavoriteArticleEvent(article: article),
+                );
+              }
+            },
+            getArticlesFav: () {
+              return favState.favArticles;
+            },
+          );
+        }
+        if (favState is FavoritesStateLoading) {
+          return Center(child: CircularProgressIndicator.adaptive());
+        }
+        if (favState is FavoritesStateError) {
+          return Text(favState.error);
+        }
+        return SizedBox.shrink();
       },
     );
   }
@@ -164,82 +194,93 @@ final class HomePageFactory {
       child: BlocBuilder<MyAccountBloc, MyAccountState>(
         builder: (context, state) {
           if (state is MyAccountStateSuccess) {
-            return MyAccountPage(
-              articles: state.articles,
-              onGoToArticle: (article) {
-                context.read<ArticleDetailBloc>().add(
-                  GetArticleDetailEvent(id: article.id),
-                );
-                Navigator.of(context).pushNamed(ArticlePage.route);
-              },
-              author: state.author,
-              showActionsSheet: (Article article) {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: IntrinsicHeight(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width - 16,
-                          child: Column(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  context.read<EditArticleBloc>().add(
-                                    GetArticleToEditEvent(article: article),
-                                  );
+            return BlocBuilder<FavoritesBloc, FavoritesBlocState>(
+              builder: (context, favState) {
+                if (favState is FavoritesStateLoading) {
+                  return Center(child: CircularProgressIndicator.adaptive());
+                }
+                return MyAccountPage(
+                  articles: state.articles,
+                  onGoToArticle: (article) {
+                    context.read<ArticleDetailBloc>().add(
+                      GetArticleDetailEvent(id: article.id),
+                    );
+                    Navigator.of(context).pushNamed(ArticlePage.route);
+                  },
+                  author: state.author,
+                  showActionsSheet: (Article article) {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: IntrinsicHeight(
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width - 16,
+                              child: Column(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      context.read<EditArticleBloc>().add(
+                                        GetArticleToEditEvent(article: article),
+                                      );
 
-                                  Navigator.of(context).popAndPushNamed(
-                                    EditArticlePageFactory.route,
-                                  );
-                                },
-                                icon: Row(
-                                  spacing: 8,
-                                  children: [
-                                    Icon(Icons.edit),
-                                    Text('Edit post'),
-                                  ],
-                                ),
+                                      Navigator.of(context).popAndPushNamed(
+                                        EditArticlePageFactory.route,
+                                      );
+                                    },
+                                    icon: Row(
+                                      spacing: 8,
+                                      children: [
+                                        Icon(Icons.edit),
+                                        Text('Edit post'),
+                                      ],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      context.read<MyAccountBloc>().add(
+                                        DeleteMyArticleEvent(id: article.id),
+                                      );
+                                    },
+                                    icon: Row(
+                                      spacing: 8,
+                                      children: [
+                                        Icon(Icons.delete),
+                                        Text('Delete post'),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  context.read<MyAccountBloc>().add(
-                                    DeleteMyArticleEvent(id: article.id),
-                                  );
-                                },
-                                icon: Row(
-                                  spacing: 8,
-                                  children: [
-                                    Icon(Icons.delete),
-                                    Text('Delete post'),
-                                  ],
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     );
                   },
+                  onGoToEditProfile: (author) {
+                    Navigator.of(context).pushNamed(EditProfilePage.route);
+                  },
+                  onTapFavButton: (value, article) {
+                    if (value) {
+                      context.read<FavoritesBloc>().add(
+                        UnFavoriteArticleEvent(article: article),
+                      );
+                    } else {
+                      context.read<FavoritesBloc>().add(
+                        FavoriteArticleEvent(article: article),
+                      );
+                    }
+                  },
+                  getArticlesFav: () {
+                    if (favState is ListFavoritesStateSuccess) {
+                      return favState.favArticles;
+                    } else {
+                      return [];
+                    }
+                  },
                 );
-              },
-              onGoToEditProfile: (author) {
-                Navigator.of(context).pushNamed(EditProfilePage.route);
-              },
-              onTapFavButton: (value, article) {
-                if (value) {
-                  context.read<FavoritesBloc>().add(
-                    UnFavoriteArticleEvent(article: article),
-                  );
-                } else {
-                  context.read<FavoritesBloc>().add(
-                    FavoriteArticleEvent(article: article),
-                  );
-                }
-              },
-              getArticlesFav: () {
-                return [];
               },
             );
           }

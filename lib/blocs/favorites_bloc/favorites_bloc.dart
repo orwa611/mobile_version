@@ -14,17 +14,16 @@ class FavoritesBloc extends Bloc<FavoritesBlocEvent, FavoritesBlocState> {
     on<FavoriteArticleEvent>((event, emit) async {
       final list = (state as ListFavoritesStateSuccess).favArticles;
       final result = await _service.insertArticle(article: event.article);
-      list.add(event.article);
       if (result) {
+        list.add(event.article);
         emit(ListFavoritesStateSuccess(favArticles: list));
       }
     });
     on<UnFavoriteArticleEvent>((event, emit) async {
       final list = (state as ListFavoritesStateSuccess).favArticles;
-
       final result = await _service.removeArticle(article: event.article);
-      list.remove(event.article);
       if (result) {
+        list.remove(event.article);
         emit(ListFavoritesStateSuccess(favArticles: list));
       }
     });
