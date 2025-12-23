@@ -13,6 +13,7 @@ class HomePage extends StatelessWidget {
   final void Function(Article) onGoToArticle;
   final void Function(String id) onGoToAuthor;
   final Widget Function() authorBuilder;
+  final Widget Function() buildLoadingWidget;
   final String Function()? getAuthorId;
   final List<Article> Function() getArticlesFav;
   final ScrollController? controller;
@@ -34,6 +35,7 @@ class HomePage extends StatelessWidget {
     required this.getArticlesFav,
     this.controller,
     required this.onRefresh,
+    required this.buildLoadingWidget,
   });
 
   @override
@@ -65,6 +67,7 @@ class HomePage extends StatelessWidget {
               onTapFavButton: onTapFavButton,
               getArticlesFav: getArticlesFav,
             ),
+            SliverToBoxAdapter(child: buildLoadingWidget()),
           ],
         ),
       ),

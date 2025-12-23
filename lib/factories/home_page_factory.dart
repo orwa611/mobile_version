@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_version/blocs/article_bloc/article_bloc.dart';
@@ -36,6 +38,15 @@ final class HomePageFactory {
   }
 
   static Widget _buildArticleList(BuildContext context) {
+    int page = 1;
+    final ScrollController controller = ScrollController();
+    controller.addListener(() {
+      if (controller.offset >= controller.position.maxScrollExtent) {
+        page++;
+        print(page);
+        context.read<ArticleBloc>().add(GetArticlesEvent(page: page));
+      }
+    });
     return BlocConsumer<UserBloc, UserState>(
       listener: (context, state) {
         if (state is UserStateLoggedIn) {
@@ -63,6 +74,7 @@ final class HomePageFactory {
                   }
 
                   return HomePage(
+                    controller: controller,
                     onGoToLogin:
                         () => Navigator.of(context).pushNamed(LoginPage.route),
                     isLoggedIn: isLoggedIn,
@@ -133,6 +145,22 @@ final class HomePageFactory {
                     },
                     onRefresh: () async {
                       context.read<ArticleBloc>().add(GetArticlesEvent());
+                    },
+                    buildLoadingWidget: () {
+                      return BlocBuilder<ArticleRefreshableCubit, bool>(
+                        builder: (context, state) {
+                          if (state == true) {
+                            return SizedBox(
+                              height: 150,
+                              child: Center(
+                                child: CircularProgressIndicator.adaptive(),
+                              ),
+                            );
+                          } else {
+                            return SizedBox.shrink();
+                          }
+                        },
+                      );
                     },
                   );
                 },
