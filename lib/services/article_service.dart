@@ -4,7 +4,7 @@ import 'package:mobile_version/core/network/network_session.dart';
 import 'package:mobile_version/models/article_response.dart';
 
 abstract class ArticleService {
-  Future<AllArticleResponse> getArticles();
+  Future<AllArticleResponse> getArticles({int page, int limit});
   Future<DetailArticleResponse> getArticle(String id);
 }
 
@@ -14,9 +14,9 @@ final class ArticleServiceImpl implements ArticleService {
   ArticleServiceImpl({required NetworkSession session}) : _session = session;
 
   @override
-  Future<AllArticleResponse> getArticles() async {
+  Future<AllArticleResponse> getArticles({int page = 1, int limit = 10}) async {
     try {
-      final result = await _session.get('/article/all');
+      final result = await _session.get('/article/all?page=$page&limit=$limit');
       return AllArticleResponse.fromJson(result);
     } on NetworkException catch (e) {
       throw AppNetworkException.fromNetworkException(e);

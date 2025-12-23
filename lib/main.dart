@@ -187,11 +187,13 @@ class MyApp extends StatelessWidget {
                     UserBloc(service: context.read<AuthStorageService>())
                       ..add(UserLoggedInEvent()),
           ),
+          BlocProvider(create: (context) => ArticleRefreshableCubit()),
           BlocProvider(
             create:
-                (context) =>
-                    ArticleBloc(service: context.read<ArticleService>())
-                      ..add(GetArticlesEvent()),
+                (context) => ArticleBloc(
+                  service: context.read<ArticleService>(),
+                  refreshableCubit: context.read<ArticleRefreshableCubit>(),
+                )..add(GetArticlesEvent()),
           ),
           BlocProvider(
             create:
