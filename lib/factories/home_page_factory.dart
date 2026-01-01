@@ -1,9 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_version/blocs/article_bloc/article_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
+import 'package:mobile_version/blocs/author_bloc/author_bloc.dart';
+import 'package:mobile_version/blocs/author_bloc/author_event.dart';
 import 'package:mobile_version/blocs/edit_article_bloc.dart/edit_article_bloc.dart';
 import 'package:mobile_version/blocs/favorites_bloc/favorites_bloc.dart';
 import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
@@ -43,7 +43,6 @@ final class HomePageFactory {
     controller.addListener(() {
       if (controller.offset >= controller.position.maxScrollExtent) {
         page++;
-        print(page);
         context.read<ArticleBloc>().add(GetArticlesEvent(page: page));
       }
     });
@@ -92,6 +91,7 @@ final class HomePageFactory {
                       Navigator.of(context).pushNamed(ArticlePage.route);
                     },
                     onGoToAuthor: (String id) {
+                      context.read<AuthorBloc>().add(GetAuthorEvent(id: id));
                       Navigator.of(context).pushNamed(AuthorPage.route);
                     },
                     authorBuilder: () {

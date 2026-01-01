@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobile_version/blocs/article_bloc/article_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
 import 'package:mobile_version/blocs/auth_bloc/auth_bloc.dart';
+import 'package:mobile_version/blocs/author_bloc/author_bloc.dart';
 import 'package:mobile_version/blocs/change_password_bloc/change_password_bloc.dart';
 import 'package:mobile_version/blocs/change_password_bloc/change_password_event.dart';
 import 'package:mobile_version/blocs/change_password_bloc/change_password_state.dart';
@@ -46,6 +47,7 @@ import 'package:mobile_version/services/article_service.dart';
 import 'package:mobile_version/services/article_service_manager.dart';
 import 'package:mobile_version/services/auth_service.dart';
 import 'package:mobile_version/services/auth_storage_service.dart';
+import 'package:mobile_version/services/author_service.dart';
 import 'package:mobile_version/services/comment_service.dart';
 import 'package:mobile_version/services/favorite_article_service.dart';
 import 'package:mobile_version/services/pick_image_service.dart';
@@ -168,6 +170,12 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<FavoriteArticleService>(
           create: (context) => FavoriteArticleServiceImpl(database),
         ),
+        RepositoryProvider<AuthorService>(
+          create:
+              (context) => AuthorServiceImpl(
+                session: context.read<AuthenticatedDioNetworkSession>(),
+              ),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -227,6 +235,10 @@ class MyApp extends StatelessWidget {
                 (context) => FavoritesBloc(
                   service: context.read<FavoriteArticleService>(),
                 )..add(GetFavoriteArticleEvent()),
+          ),
+          BlocProvider(
+            create:
+                (context) => AuthorBloc(service: context.read<AuthorService>()),
           ),
         ],
         child: MaterialApp(
