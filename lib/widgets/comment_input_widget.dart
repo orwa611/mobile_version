@@ -43,6 +43,7 @@ class _CommentInputWidgetState extends State<CommentInputWidget> {
               onPressed: () {
                 if (_commentController.text.isNotEmpty) {
                   widget.onSend(_commentController.text);
+                  _commentController.clear();
                 }
               },
             ),
