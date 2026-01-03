@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
 import 'package:mobile_version/blocs/comment_bloc.dart/comment_bloc.dart';
+import 'package:mobile_version/blocs/user_bloc/user_bloc.dart';
+import 'package:mobile_version/core/extensions/context_extension.dart';
 import 'package:mobile_version/pages/article_page.dart';
 import 'package:mobile_version/widgets/app_error_widget.dart';
 import 'package:mobile_version/widgets/loading_widget.dart';
@@ -41,9 +43,19 @@ final class ArticlePageFactory {
               child: ArticlePage(
                 article: state.article,
                 onSend: (comment) {
-                  context.read<CommentBloc>().add(
-                    AddToDbCommentEvent(id: state.article.id, comment: comment),
-                  );
+                  if (context.read<UserBloc>().state is UserStateLoggedIn) {
+                    context.read<CommentBloc>().add(
+                      AddToDbCommentEvent(
+                        id: state.article.id,
+                        comment: comment,
+                      ),
+                    );
+                  } else {
+                    context.snackBar(
+                      'you cant add comment! you need to login.',
+                      status: SnackBarStatus.info,
+                    );
+                  }
                 },
               ),
             );

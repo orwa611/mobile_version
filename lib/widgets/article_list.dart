@@ -3,11 +3,13 @@ import 'package:mobile_version/models/article_model.dart';
 import 'package:mobile_version/widgets/article_card_widget.dart';
 import 'package:mobile_version/widgets/article_status_widget.dart';
 
+typedef ArticleCallback = void Function(Article);
+
 class ArticleList extends StatelessWidget {
   final List<Article> articles;
-  final void Function(Article) onGoToArticle;
-  final void Function(Article)? onTapActionsButton;
-  final void Function(Article)? onTapAuthorButton;
+  final ArticleCallback onGoToArticle;
+  final ArticleCallback? onTapActionsButton;
+  final ArticleCallback? onTapAuthorButton;
   final bool shouldDisplayActions;
   final String authorId;
   final void Function(bool, Article) onTapFavButton;
