@@ -8,15 +8,14 @@ abstract class GetTokenManager {
   Future<String> getToken();
 }
 
-final class AuthenticatedDioNetworkSession implements NetworkSession {
+final class DioNetworkSession implements NetworkSession {
   final Dio dio;
 
-  AuthenticatedDioNetworkSession({
-    required this.dio,
-    required GetTokenManager manager,
-  }) {
+  DioNetworkSession({required this.dio, required GetTokenManager manager}) {
     dio.options.baseUrl = NetworkConstants.baseUrl;
     dio.interceptors.add(AuthorizationInterceptor(manager: manager));
+    dio.options.connectTimeout = Duration(seconds: 20);
+    dio.options.receiveTimeout = Duration(seconds: 30);
   }
 
   @override
@@ -24,7 +23,6 @@ final class AuthenticatedDioNetworkSession implements NetworkSession {
     String path, {
     Map<String, String> headers = const {},
   }) {
-    // TODO: implement delete
     throw UnimplementedError();
   }
 

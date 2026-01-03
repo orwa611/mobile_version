@@ -26,7 +26,7 @@ class ArticleDetailBloc extends Bloc<ArticleDetailEvent, ArticleDetailState> {
       if (state is ArticleDetailStateSuccess) {
         final article = (state as ArticleDetailStateSuccess).article;
         emit(ArticleDetailStateLoading());
-        article.comments.add(event.comment);
+        article.comments.insert(0, event.comment);
         emit(ArticleDetailStateSuccess(article: article));
       }
     });

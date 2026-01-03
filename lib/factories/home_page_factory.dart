@@ -1,9 +1,9 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_version/blocs/article_bloc/article_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
+import 'package:mobile_version/blocs/author_bloc/author_bloc.dart';
+import 'package:mobile_version/blocs/author_bloc/author_event.dart';
 import 'package:mobile_version/blocs/edit_article_bloc.dart/edit_article_bloc.dart';
 import 'package:mobile_version/blocs/favorites_bloc/favorites_bloc.dart';
 import 'package:mobile_version/blocs/my_account_bloc/my_account_bloc.dart';
@@ -18,6 +18,7 @@ import 'package:mobile_version/pages/home_page.dart';
 import 'package:mobile_version/pages/login/login_page.dart';
 import 'package:mobile_version/pages/my_account_page.dart';
 import 'package:mobile_version/widgets/create_article_widget.dart';
+import 'package:mobile_version/widgets/loading_widget.dart';
 import 'package:mobile_version/widgets/primary_button.dart';
 import 'package:mobile_version/widgets/tab_bar_widget.dart';
 
@@ -43,7 +44,6 @@ final class HomePageFactory {
     controller.addListener(() {
       if (controller.offset >= controller.position.maxScrollExtent) {
         page++;
-        print(page);
         context.read<ArticleBloc>().add(GetArticlesEvent(page: page));
       }
     });
@@ -61,7 +61,7 @@ final class HomePageFactory {
         return BlocBuilder<ArticleBloc, ArticleState>(
           builder: (context, articleState) {
             if (articleState is ArticleStateLoading) {
-              return Center(child: CircularProgressIndicator.adaptive());
+              return LoadingWidget();
             }
             if (articleState is ArticleStateError) {
               return Center(child: Text(articleState.errorMessage));
@@ -70,7 +70,7 @@ final class HomePageFactory {
               return BlocBuilder<FavoritesBloc, FavoritesBlocState>(
                 builder: (context, favState) {
                   if (favState is FavoritesStateLoading) {
-                    return Center(child: CircularProgressIndicator.adaptive());
+                    return LoadingWidget();
                   }
 
                   return HomePage(
@@ -92,6 +92,7 @@ final class HomePageFactory {
                       Navigator.of(context).pushNamed(ArticlePage.route);
                     },
                     onGoToAuthor: (String id) {
+                      context.read<AuthorBloc>().add(GetAuthorEvent(id: id));
                       Navigator.of(context).pushNamed(AuthorPage.route);
                     },
                     authorBuilder: () {
@@ -205,7 +206,7 @@ final class HomePageFactory {
           );
         }
         if (favState is FavoritesStateLoading) {
-          return Center(child: CircularProgressIndicator.adaptive());
+          return LoadingWidget();
         }
         if (favState is FavoritesStateError) {
           return Text(favState.error);
@@ -228,102 +229,24 @@ final class HomePageFactory {
             return BlocBuilder<FavoritesBloc, FavoritesBlocState>(
               builder: (context, favState) {
                 if (favState is FavoritesStateLoading) {
-                  return Center(child: CircularProgressIndicator.adaptive());
+                  return LoadingWidget();
                 }
-                return MyAccountPage(
-                  articles: state.articles,
-                  onGoToArticle: (article) {
-                    context.read<ArticleDetailBloc>().add(
-                      GetArticleDetailEvent(id: article.id),
-                    );
-                    Navigator.of(context).pushNamed(ArticlePage.route);
-                  },
-                  author: state.author,
-                  showActionsSheet: (Article article) {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: IntrinsicHeight(
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width - 16,
-                              child: Column(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      context.read<EditArticleBloc>().add(
-                                        GetArticleToEditEvent(article: article),
-                                      );
-
-                                      Navigator.of(context).popAndPushNamed(
-                                        EditArticlePageFactory.route,
-                                      );
-                                    },
-                                    icon: Row(
-                                      spacing: 8,
-                                      children: [
-                                        Icon(Icons.edit),
-                                        Text('Edit post'),
-                                      ],
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      context.read<MyAccountBloc>().add(
-                                        DeleteMyArticleEvent(id: article.id),
-                                      );
-                                    },
-                                    icon: Row(
-                                      spacing: 8,
-                                      children: [
-                                        Icon(Icons.delete),
-                                        Text('Delete post'),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  onGoToEditProfile: (author) {
-                    Navigator.of(context).pushNamed(EditProfilePage.route);
-                  },
-                  onTapFavButton: (value, article) {
-                    if (value) {
-                      context.read<FavoritesBloc>().add(
-                        UnFavoriteArticleEvent(article: article),
-                      );
-                    } else {
-                      context.read<FavoritesBloc>().add(
-                        FavoriteArticleEvent(article: article),
-                      );
-                    }
-                  },
-                  getArticlesFav: () {
-                    if (favState is ListFavoritesStateSuccess) {
-                      return favState.favArticles;
-                    } else {
-                      return [];
-                    }
-                  },
-                );
+                return _buildMyAccountPage(state, context, favState);
               },
             );
           }
           if (state is MyAccountStateLoading) {
-            return CircularProgressIndicator.adaptive();
+            return LoadingWidget();
           }
           if (state is MyAccountStateError) {
             return Center(child: Text(state.errorMessage));
           }
           if (state is MyAccountStateUnauthenticated) {
-            return Center(
+            return Padding(
+              padding: EdgeInsets.all(10),
               child: Column(
+                spacing: 8,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(state.errorMessage),
                   PrimaryButton(
@@ -339,6 +262,89 @@ final class HomePageFactory {
           return SizedBox.shrink();
         },
       ),
+    );
+  }
+
+  static MyAccountPage _buildMyAccountPage(
+    MyAccountStateSuccess state,
+    BuildContext context,
+    FavoritesBlocState favState,
+  ) {
+    return MyAccountPage(
+      articles: state.articles,
+      onGoToArticle: (article) {
+        context.read<ArticleDetailBloc>().add(
+          GetArticleDetailEvent(id: article.id),
+        );
+        Navigator.of(context).pushNamed(ArticlePage.route);
+      },
+      author: state.author,
+      showActionsSheet: (Article article) {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: IntrinsicHeight(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width - 16,
+                  child: Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          context.read<EditArticleBloc>().add(
+                            GetArticleToEditEvent(article: article),
+                          );
+
+                          Navigator.of(
+                            context,
+                          ).popAndPushNamed(EditArticlePageFactory.route);
+                        },
+                        icon: Row(
+                          spacing: 8,
+                          children: [Icon(Icons.edit), Text('Edit post')],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          context.read<MyAccountBloc>().add(
+                            DeleteMyArticleEvent(id: article.id),
+                          );
+                        },
+                        icon: Row(
+                          spacing: 8,
+                          children: [Icon(Icons.delete), Text('Delete post')],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+      onGoToEditProfile: (author) {
+        Navigator.of(context).pushNamed(EditProfilePage.route);
+      },
+      onTapFavButton: (value, article) {
+        if (value) {
+          context.read<FavoritesBloc>().add(
+            UnFavoriteArticleEvent(article: article),
+          );
+        } else {
+          context.read<FavoritesBloc>().add(
+            FavoriteArticleEvent(article: article),
+          );
+        }
+      },
+      getArticlesFav: () {
+        if (favState is ListFavoritesStateSuccess) {
+          return favState.favArticles;
+        } else {
+          return [];
+        }
+      },
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mobile_version/blocs/article_bloc/article_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
 import 'package:mobile_version/blocs/auth_bloc/auth_bloc.dart';
+import 'package:mobile_version/blocs/author_bloc/author_bloc.dart';
 import 'package:mobile_version/blocs/change_password_bloc/change_password_bloc.dart';
 import 'package:mobile_version/blocs/change_password_bloc/change_password_event.dart';
 import 'package:mobile_version/blocs/change_password_bloc/change_password_state.dart';
@@ -18,9 +19,7 @@ import 'package:mobile_version/blocs/register_bloc/register_bloc.dart';
 import 'package:mobile_version/blocs/user_bloc/user_bloc.dart';
 import 'package:mobile_version/core/app_image_picker.dart';
 import 'package:mobile_version/core/extensions/context_extension.dart';
-import 'package:mobile_version/core/network/authenticated_dio_network_session.dart';
-import 'package:mobile_version/core/network/authenticated_http_network_session.dart';
-import 'package:mobile_version/core/network/http_network_session.dart';
+import 'package:mobile_version/core/network/dio_network_session.dart';
 import 'package:mobile_version/core/storage/fav_db.dart';
 import 'package:mobile_version/core/storage/storage_adapter.dart';
 import 'package:mobile_version/core/storage/storage_session.dart';
@@ -46,6 +45,7 @@ import 'package:mobile_version/services/article_service.dart';
 import 'package:mobile_version/services/article_service_manager.dart';
 import 'package:mobile_version/services/auth_service.dart';
 import 'package:mobile_version/services/auth_storage_service.dart';
+import 'package:mobile_version/services/author_service.dart';
 import 'package:mobile_version/services/comment_service.dart';
 import 'package:mobile_version/services/favorite_article_service.dart';
 import 'package:mobile_version/services/pick_image_service.dart';
@@ -89,9 +89,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<HttpNetworkSession>(
-          create: (context) => HttpNetworkSession(),
-        ),
         RepositoryProvider<StorageSession>(
           create:
               (context) => SecureStorageSession(
@@ -106,12 +103,12 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<AuthService>(
           create:
               (context) =>
-                  AuthServiceImpl(session: context.read<HttpNetworkSession>()),
+                  AuthServiceImpl(session: context.read<DioNetworkSession>()),
         ),
         RepositoryProvider<RegisterService>(
           create:
               (context) => RegisterServiceImpl(
-                session: context.read<HttpNetworkSession>(),
+                session: context.read<DioNetworkSession>(),
               ),
         ),
         RepositoryProvider<AuthStorageService>(
@@ -119,16 +116,10 @@ class MyApp extends StatelessWidget {
               (context) =>
                   AuthStorageService(storage: context.read<StorageAdapter>()),
         ),
-        RepositoryProvider<AuthenticatedHttpNetworkSession>(
+
+        RepositoryProvider<DioNetworkSession>(
           create:
-              (context) => AuthenticatedHttpNetworkSession(
-                networkSession: context.read<HttpNetworkSession>(),
-                manager: context.read<AuthStorageService>(),
-              ),
-        ),
-        RepositoryProvider<AuthenticatedDioNetworkSession>(
-          create:
-              (context) => AuthenticatedDioNetworkSession(
+              (context) => DioNetworkSession(
                 manager: context.read<AuthStorageService>(),
                 dio: Dio(),
               ),
@@ -136,19 +127,19 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<ArticleService>(
           create:
               (context) => ArticleServiceImpl(
-                session: context.read<HttpNetworkSession>(),
+                session: context.read<DioNetworkSession>(),
               ),
         ),
         RepositoryProvider<AccountService>(
           create:
               (context) => AccountServiceImpl(
-                session: context.read<AuthenticatedDioNetworkSession>(),
+                session: context.read<DioNetworkSession>(),
               ),
         ),
         RepositoryProvider<CommentService>(
           create:
               (context) => CommentServiceImpl(
-                session: context.read<AuthenticatedHttpNetworkSession>(),
+                session: context.read<DioNetworkSession>(),
               ),
         ),
         RepositoryProvider<AppImagePicker>(
@@ -162,11 +153,16 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<ArticleServiceManager>(
           create:
               (context) => ArticleServiceManagerImpl(
-                session: context.read<AuthenticatedDioNetworkSession>(),
+                session: context.read<DioNetworkSession>(),
               ),
         ),
         RepositoryProvider<FavoriteArticleService>(
           create: (context) => FavoriteArticleServiceImpl(database),
+        ),
+        RepositoryProvider<AuthorService>(
+          create:
+              (context) =>
+                  AuthorServiceImpl(session: context.read<DioNetworkSession>()),
         ),
       ],
       child: MultiBlocProvider(
@@ -227,6 +223,10 @@ class MyApp extends StatelessWidget {
                 (context) => FavoritesBloc(
                   service: context.read<FavoriteArticleService>(),
                 )..add(GetFavoriteArticleEvent()),
+          ),
+          BlocProvider(
+            create:
+                (context) => AuthorBloc(service: context.read<AuthorService>()),
           ),
         ],
         child: MaterialApp(

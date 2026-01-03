@@ -15,7 +15,7 @@ class _CommentInputWidgetState extends State<CommentInputWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       color: Colors.white,
       child: SafeArea(
         child: Row(
@@ -43,6 +43,7 @@ class _CommentInputWidgetState extends State<CommentInputWidget> {
               onPressed: () {
                 if (_commentController.text.isNotEmpty) {
                   widget.onSend(_commentController.text);
+                  _commentController.clear();
                 }
               },
             ),
