@@ -100,6 +100,19 @@ class MyApp extends StatelessWidget {
               (context) =>
                   StorageAdapterImpl(session: context.read<StorageSession>()),
         ),
+        RepositoryProvider<AuthStorageService>(
+          create:
+              (context) =>
+                  AuthStorageService(storage: context.read<StorageAdapter>()),
+        ),
+        RepositoryProvider<DioNetworkSession>(
+          create:
+              (context) => DioNetworkSession(
+                manager: context.read<AuthStorageService>(),
+                dio: Dio(),
+              ),
+        ),
+
         RepositoryProvider<AuthService>(
           create:
               (context) =>
@@ -111,19 +124,7 @@ class MyApp extends StatelessWidget {
                 session: context.read<DioNetworkSession>(),
               ),
         ),
-        RepositoryProvider<AuthStorageService>(
-          create:
-              (context) =>
-                  AuthStorageService(storage: context.read<StorageAdapter>()),
-        ),
 
-        RepositoryProvider<DioNetworkSession>(
-          create:
-              (context) => DioNetworkSession(
-                manager: context.read<AuthStorageService>(),
-                dio: Dio(),
-              ),
-        ),
         RepositoryProvider<ArticleService>(
           create:
               (context) => ArticleServiceImpl(
