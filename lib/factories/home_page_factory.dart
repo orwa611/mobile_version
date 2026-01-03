@@ -89,7 +89,9 @@ final class HomePageFactory {
                       context.read<ArticleDetailBloc>().add(
                         GetArticleDetailEvent(id: article.id),
                       );
-                      Navigator.of(context).pushNamed(ArticlePage.route);
+                      Navigator.of(
+                        context,
+                      ).pushNamed(ArticlePage.route, arguments: article.id);
                     },
                     onGoToAuthor: (String id) {
                       context.read<AuthorBloc>().add(GetAuthorEvent(id: id));

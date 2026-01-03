@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
 import 'package:mobile_version/blocs/comment_bloc.dart/comment_bloc.dart';
 import 'package:mobile_version/pages/article_page.dart';
+import 'package:mobile_version/widgets/app_error_widget.dart';
 import 'package:mobile_version/widgets/loading_widget.dart';
 
 final class ArticlePageFactory {
@@ -15,7 +16,18 @@ final class ArticlePageFactory {
             return LoadingWidget();
           }
           if (state is ArticleDetailStateError) {
-            return Center(child: Text(state.errorMessage));
+            return AppErrorWidget(
+              message: state.errorMessage,
+              onRefresh: () {
+                final id =
+                    ModalRoute.of(context)?.settings.arguments as String?;
+                if (id != null) {
+                  context.read<ArticleDetailBloc>().add(
+                    GetArticleDetailEvent(id: id),
+                  );
+                }
+              },
+            );
           }
           if (state is ArticleDetailStateSuccess) {
             return BlocListener<CommentBloc, CommentState>(
