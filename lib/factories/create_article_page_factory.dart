@@ -6,6 +6,7 @@ import 'package:mobile_version/core/extensions/context_extension.dart';
 import 'package:mobile_version/pages/create_article/create_article_notifier.dart';
 import 'package:mobile_version/pages/create_article/create_article_page.dart';
 import 'package:mobile_version/services/pick_image_service.dart';
+import 'package:mobile_version/widgets/loading_widget.dart';
 
 final class CreateArticlePageFactory {
   static Widget buildCreateArticlePage(BuildContext context) {
@@ -30,7 +31,7 @@ final class CreateArticlePageFactory {
             },
             builder: (context, createArticleState) {
               if (createArticleState is FormArticleLoadingState) {
-                return Center(child: CircularProgressIndicator.adaptive());
+                return LoadingWidget();
               }
               return CreateArticlePage(
                 onShare: (request) {

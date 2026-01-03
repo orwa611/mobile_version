@@ -6,6 +6,7 @@ import 'package:mobile_version/blocs/author_bloc/author_state.dart';
 import 'package:mobile_version/blocs/favorites_bloc/favorites_bloc.dart';
 import 'package:mobile_version/pages/article_page.dart';
 import 'package:mobile_version/pages/author_page.dart';
+import 'package:mobile_version/widgets/loading_widget.dart';
 
 final class AuthorPageFactory {
   static Widget buildAuthorPage(BuildContext context) {
@@ -17,13 +18,13 @@ final class AuthorPageFactory {
             return Center(child: Text(authorState.errorMessage));
           }
           if (authorState is AuthorLoadingState) {
-            return Center(child: CircularProgressIndicator.adaptive());
+            return LoadingWidget();
           }
           if (authorState is AuthorSuccessState) {
             return BlocBuilder<FavoritesBloc, FavoritesBlocState>(
               builder: (context, favState) {
                 if (favState is FavoritesStateLoading) {
-                  return Center(child: CircularProgressIndicator.adaptive());
+                  return LoadingWidget();
                 }
                 return AuthorPage(
                   articles: authorState.articles,

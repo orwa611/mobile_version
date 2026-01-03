@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_version/blocs/article_detail_bloc.dart/article_detail_bloc.dart';
 import 'package:mobile_version/blocs/comment_bloc.dart/comment_bloc.dart';
 import 'package:mobile_version/pages/article_page.dart';
+import 'package:mobile_version/widgets/loading_widget.dart';
 
 final class ArticlePageFactory {
   static Widget buildArticlePage(BuildContext context) {
@@ -11,7 +12,7 @@ final class ArticlePageFactory {
       body: BlocBuilder<ArticleDetailBloc, ArticleDetailState>(
         builder: (context, state) {
           if (state is ArticleDetailStateLoading) {
-            return Center(child: CircularProgressIndicator.adaptive());
+            return LoadingWidget();
           }
           if (state is ArticleDetailStateError) {
             return Center(child: Text(state.errorMessage));

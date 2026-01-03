@@ -1,4 +1,4 @@
-import 'package:mobile_version/core/network/authenticated_dio_network_session.dart';
+import 'package:mobile_version/core/network/dio_network_session.dart';
 import 'package:mobile_version/core/network/network_session.dart';
 
 class AuthenticatedHttpNetworkSession implements NetworkSession {
